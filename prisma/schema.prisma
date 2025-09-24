@@ -1,0 +1,33 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model AddressInfo {
+  id         Int      @id @default(autoincrement())
+  fullName   String   @map("full_name") @db.VarChar(64)
+  gender     String   @db.VarChar(16)
+  birthday   String   @map("birthday") @db.VarChar(64)
+  address    String   @db.Text
+  telephone  String?  @map("telephone") @db.VarChar(20)
+  city       String?  @db.VarChar(100)
+  zipCode    String?  @map("zip_code") @db.VarChar(20)
+  state      String?  @db.VarChar(50)
+  stateFull  String?  @map("state_full") @db.VarChar(100)
+  sourceUrl  String?  @map("source_url") @db.Text
+  country    String   @db.VarChar(100)
+  latitude   String?  @db.VarChar(20)
+  longitude  String?  @db.VarChar(20)
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @default(now()) @updatedAt @map("updated_at")
+
+  @@index([country])
+  @@map("address_info")
+}

@@ -3,34 +3,38 @@
 import { useState, useEffect } from 'react';
 
 interface AddressData {
-  name: string;
+  fullName: string;
   gender: string;
   birthday: string;
-  state: string;
-  hairColor: string;
-  street: string;
+  address: string;
+  telephone: string;
   city: string;
-  stateCode: string;
-  stateFull: string;
   zipCode: string;
-  phone: string;
+  state: string;
+  stateFull: string;
+  country: string;
+}
+
+interface ApiResponse {
+  code: number;
+  message: string;
+  data: AddressData;
 }
 
 export default function Home() {
   const [isDark, setIsDark] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [addressData, setAddressData] = useState<AddressData>({
-    name: 'Bo Regueno',
-    gender: '女',
-    birthday: '6/19/2000',
-    state: 'MI',
-    hairColor: 'Brown',
-    street: '426 Dye Street',
-    city: 'Mesa',
-    stateCode: 'AZ',
-    stateFull: 'Arizona',
-    zipCode: '85203',
-    phone: '822-223-9973'
+    fullName: '',
+    gender: '',
+    birthday: '',
+    address: '',
+    telephone: '',
+    city: '',
+    zipCode: '',
+    state: '',
+    stateFull: '',
+    country: ''
   });
 
   useEffect(() => {
@@ -45,6 +49,39 @@ export default function Home() {
       setIsDark(false);
       document.documentElement.classList.remove('dark');
     }
+
+    // Fetch address data from API via Next.js proxy
+    const fetchAddressData = async () => {
+      try {
+        const response = await fetch('/api/address/info', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ country: 'us' }),
+        });
+
+        if (response.ok) {
+          const apiResponse: ApiResponse = await response.json();
+          console.log('API Response:', apiResponse);
+
+          if (apiResponse.code === 200 && apiResponse.data) {
+            setAddressData(apiResponse.data);
+            console.log('Address data loaded successfully:', apiResponse.data);
+          } else {
+            console.log('API returned non-200 code or no data:', apiResponse.message);
+          }
+        } else {
+          console.error('Failed to fetch address data:', response.status, response.statusText);
+        }
+      } catch (error) {
+        console.error('Error fetching address data:', error);
+        // 如果API调用失败，保持使用默认数据
+        console.log('Using default address data due to API failure');
+      }
+    };
+
+    fetchAddressData();
   }, []);
 
   const handleThemeToggle = () => {
@@ -60,22 +97,32 @@ export default function Home() {
     }
   };
 
-  const handleGenerate = () => {
-    // Mock data generation - in a real app, this would call an API
-    const mockData: AddressData = {
-      name: 'John Smith',
-      gender: '男',
-      birthday: '3/15/1985',
-      state: 'CA',
-      hairColor: 'Black',
-      street: '123 Main Street',
-      city: 'Los Angeles',
-      stateCode: 'CA',
-      stateFull: 'California',
-      zipCode: '90210',
-      phone: '555-123-4567'
-    };
-    setAddressData(mockData);
+  const handleGenerate = async () => {
+    try {
+      const response = await fetch('/api/address/info', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ country: 'us' }),
+      });
+
+      if (response.ok) {
+        const apiResponse: ApiResponse = await response.json();
+        console.log('API Response:', apiResponse);
+
+        if (apiResponse.code === 200 && apiResponse.data) {
+          setAddressData(apiResponse.data);
+          console.log('New address data generated successfully:', apiResponse.data);
+        } else {
+          console.log('API returned non-200 code or no data:', apiResponse.message);
+        }
+      } else {
+        console.error('Failed to generate new address data:', response.status, response.statusText);
+      }
+    } catch (error) {
+      console.error('Error generating new address data:', error);
+    }
   };
 
   const handleSave = () => {
@@ -119,7 +166,7 @@ export default function Home() {
         <nav className="bg-surface-light dark:glass-morphism p-4 rounded-lg shadow-card dark:shadow-glass mb-6 border border-border-light dark:border-border-glass backdrop-blur-glass">
           <ul className="flex flex-wrap gap-x-8 gap-y-2 text-sm">
             <li><a className="text-primary hover:text-primary-600 transition-colors font-medium" href="#">首页</a></li>
-            <li><a className="text-subtle-light dark:text-subtle-dark hover:text-primary transition-colors" href="#">美国地址</a></li>
+            <li><a className="text-subtle-light dark:text-subtle-dark hover:text-primary transition-colors" href="/us">美国地址</a></li>
             <li><a className="text-subtle-light dark:text-subtle-dark hover:text-primary transition-colors" href="#">台湾地址</a></li>
             <li><a className="text-subtle-light dark:text-subtle-dark hover:text-primary transition-colors" href="#">加拿大地址</a></li>
             <li><a className="text-subtle-light dark:text-subtle-dark hover:text-primary transition-colors" href="#">香港地址</a></li>
@@ -174,7 +221,7 @@ export default function Home() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-1 text-sm">
               <div className="flex border-b border-dashed border-border-light dark:border-border-dark py-3">
                 <span className="w-20 text-subtle-light dark:text-subtle-dark">姓名</span>
-                <span className="flex-1 text-text-light dark:text-text-dark">{addressData.name}</span>
+                <span className="flex-1 text-text-light dark:text-text-dark">{addressData.fullName}</span>
               </div>
               <div className="flex border-b border-dashed border-border-light dark:border-border-dark py-3">
                 <span className="w-20 text-subtle-light dark:text-subtle-dark">性别</span>
@@ -185,20 +232,8 @@ export default function Home() {
                 <span className="flex-1 text-text-light dark:text-text-dark">{addressData.birthday}</span>
               </div>
               <div className="flex border-b border-dashed border-border-light dark:border-border-dark py-3">
-                <span className="w-20 text-subtle-light dark:text-subtle-dark">州</span>
-                <span className="flex-1 text-text-light dark:text-text-dark">{addressData.state}</span>
-              </div>
-              <div className="flex border-b border-dashed border-border-light dark:border-border-dark py-3">
-                <span className="w-20 text-subtle-light dark:text-subtle-dark">头发颜色</span>
-                <span className="flex-1 text-text-light dark:text-text-dark">{addressData.hairColor}</span>
-              </div>
-              <div className="flex border-b border-dashed border-border-light dark:border-border-dark py-3">
                 <span className="w-20 text-subtle-light dark:text-subtle-dark">地址</span>
-                <span className="flex-1 text-text-light dark:text-text-dark"></span>
-              </div>
-              <div className="flex border-b border-dashed border-border-light dark:border-border-dark py-3">
-                <span className="w-20 text-subtle-light dark:text-subtle-dark">街道</span>
-                <span className="flex-1 text-text-light dark:text-text-dark">{addressData.street}</span>
+                <span className="flex-1 text-text-light dark:text-text-dark">{addressData.address}</span>
               </div>
               <div className="flex border-b border-dashed border-border-light dark:border-border-dark py-3">
                 <span className="w-20 text-subtle-light dark:text-subtle-dark">城市</span>
@@ -206,7 +241,7 @@ export default function Home() {
               </div>
               <div className="flex border-b border-dashed border-border-light dark:border-border-dark py-3">
                 <span className="w-20 text-subtle-light dark:text-subtle-dark">州</span>
-                <span className="flex-1 text-text-light dark:text-text-dark">{addressData.stateCode}</span>
+                <span className="flex-1 text-text-light dark:text-text-dark">{addressData.state}</span>
               </div>
               <div className="flex border-b border-dashed border-border-light dark:border-border-dark py-3">
                 <span className="w-20 text-subtle-light dark:text-subtle-dark">州全称</span>
@@ -218,7 +253,7 @@ export default function Home() {
               </div>
               <div className="flex border-b border-dashed border-border-light dark:border-border-dark py-3">
                 <span className="w-20 text-subtle-light dark:text-subtle-dark">电话号码</span>
-                <span className="flex-1 text-text-light dark:text-text-dark">{addressData.phone}</span>
+                <span className="flex-1 text-text-light dark:text-text-dark">{addressData.telephone}</span>
               </div>
             </div>
           </div>
@@ -245,16 +280,7 @@ export default function Home() {
 
         {/* Footer */}
         <footer className="mt-8 bg-surface-light dark:glass-morphism p-6 rounded-lg shadow-card dark:shadow-glass border border-border-light dark:border-border-glass backdrop-blur-glass text-sm">
-          <h3 className="text-lg font-semibold text-primary mb-4">所有国家和地区的地址</h3>
-          <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-4 mb-6">
-            <a className="text-subtle-light dark:text-subtle-dark hover:text-primary transition-colors" href="#">美国地址</a>
-            <a className="text-subtle-light dark:text-subtle-dark hover:text-primary transition-colors" href="#">台湾地址</a>
-            <a className="text-subtle-light dark:text-subtle-dark hover:text-primary transition-colors" href="#">加拿大地址</a>
-            <a className="text-subtle-light dark:text-subtle-dark hover:text-primary transition-colors" href="#">香港地址</a>
-            <a className="text-subtle-light dark:text-subtle-dark hover:text-primary transition-colors" href="#">新加坡地址</a>
-            <a className="text-subtle-light dark:text-subtle-dark hover:text-primary transition-colors" href="#">英国地址</a>
-          </div>
-          <div className="border-t border-border-light dark:border-border-dark pt-4 text-center text-xs text-subtle-light dark:text-subtle-dark">
+          <div className="pt-4 text-center text-xs text-subtle-light dark:text-subtle-dark">
             <p>Copyright © 2021 address-gen.ccc. All rights reserved.</p>
             <p className="mt-1">美国地址生成的数据来自于各个大学学习, 学习资料以及部分网友的分享, 不用于任何商业用途, 仅供学习参考.</p>
           </div>
