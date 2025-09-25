@@ -1,7 +1,9 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
+import { filterCities } from '@/lib/cityData';
+import AutocompletePortal from './AutocompletePortal';
 
 interface AddressData {
   fullName: string;
@@ -27,10 +29,17 @@ export default function AddressGenerator() {
   const [searchQuery, setSearchQuery] = useState('');
   const [copySuccess, setCopySuccess] = useState(false);
   const [isSearching, setIsSearching] = useState(false);
-  const [searchError, setSearchError] = useState('');
+  // const [searchError, setSearchError] = useState(''); // 暂时未使用，注释掉
   const [searchMessage, setSearchMessage] = useState<{ show: boolean; text: string; type: 'error' | 'info' }>({ show: false, text: '', type: 'info' });
   const [currentCountry, setCurrentCountry] = useState('us'); // 添加当前国家状态
   const [isClient, setIsClient] = useState(false); // 添加客户端状态标识
+
+  // 自动补全相关状态
+  const [suggestions, setSuggestions] = useState<string[]>([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [highlightedIndex, setHighlightedIndex] = useState(-1);
+  const suggestionsRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
   const [addressData, setAddressData] = useState<AddressData>({
     fullName: '',
     gender: '',
@@ -208,6 +217,76 @@ export default function AddressGenerator() {
     }, 3000);
   };
 
+  // 处理搜索输入变化，实现自动补全
+  const handleSearchInputChange = (value: string) => {
+    setSearchQuery(value);
+
+    if (value.trim()) {
+      const filteredSuggestions = filterCities(value.trim(), 10);
+      setSuggestions(filteredSuggestions);
+      setShowSuggestions(true);
+      setHighlightedIndex(-1);
+    } else {
+      setSuggestions([]);
+      setShowSuggestions(false);
+      setHighlightedIndex(-1);
+    }
+  };
+
+  // 选择建议项
+  const selectSuggestion = (suggestion: string) => {
+    setSearchQuery(suggestion);
+    setShowSuggestions(false);
+    setSuggestions([]);
+    setHighlightedIndex(-1);
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
+  };
+
+  // 处理键盘导航
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (!showSuggestions || suggestions.length === 0) {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        handleSearch();
+      }
+      return;
+    }
+
+    switch (e.key) {
+      case 'ArrowDown':
+        e.preventDefault();
+        setHighlightedIndex(prev => (prev < suggestions.length - 1 ? prev + 1 : prev));
+        break;
+      case 'ArrowUp':
+        e.preventDefault();
+        setHighlightedIndex(prev => (prev > 0 ? prev - 1 : -1));
+        break;
+      case 'Enter':
+        e.preventDefault();
+        if (highlightedIndex >= 0 && highlightedIndex < suggestions.length) {
+          selectSuggestion(suggestions[highlightedIndex]);
+        } else {
+          handleSearch();
+        }
+        break;
+      case 'Escape':
+        setShowSuggestions(false);
+        setHighlightedIndex(-1);
+        break;
+    }
+  };
+
+  // 点击外部区域关闭建议列表（Portal 组件会处理）
+  useEffect(() => {
+    // 清理函数：当组件卸载时清理 portal
+    return () => {
+      setShowSuggestions(false);
+      setHighlightedIndex(-1);
+    };
+  }, []);
+
   const handleSearch = async () => {
     // 输入验证
     if (!searchQuery.trim()) {
@@ -216,7 +295,7 @@ export default function AddressGenerator() {
     }
 
     setIsSearching(true);
-    setSearchError('');
+    // setSearchError('');
     setSearchMessage({ show: false, text: '', type: 'info' });
 
     try {
@@ -243,16 +322,16 @@ export default function AddressGenerator() {
           // 无搜索结果
           showSearchMessage('结果为空', 'error');
         } else {
-          setSearchError(apiResponse.message || '搜索失败');
+          // setSearchError(apiResponse.message || '搜索失败');
           showSearchMessage(apiResponse.message || '搜索失败', 'error');
         }
       } else {
-        setSearchError('搜索服务不可用');
+        // setSearchError('搜索服务不可用');
         showSearchMessage('搜索服务不可用', 'error');
       }
     } catch (error) {
       console.error('Error searching address data:', error);
-      setSearchError('搜索失败，请重试');
+      // setSearchError('搜索失败，请重试');
       showSearchMessage('搜索失败，请重试', 'error');
     } finally {
       setIsSearching(false);
@@ -339,11 +418,13 @@ export default function AddressGenerator() {
               <div className="space-y-3">
                 <div className="flex items-center space-x-3">
                   <input
+                    ref={inputRef}
                     className="flex-grow p-3 border border-border-light dark:border-border-dark rounded-md bg-background-light dark:bg-background-dark focus:ring-2 focus:ring-primary focus:border-primary transition-colors text-sm"
                     placeholder="输入城市名或州名搜索"
                     type="text"
                     value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
+                    onChange={(e) => handleSearchInputChange(e.target.value)}
+                    onKeyDown={handleKeyDown}
                   />
                   <button
                     className={`bg-primary text-white px-6 py-3 rounded-md font-medium transition-colors text-sm ${
@@ -355,6 +436,39 @@ export default function AddressGenerator() {
                     {isSearching ? '搜索中...' : '搜索'}
                   </button>
                 </div>
+
+                {/* 自动补全下拉列表 - 使用 Portal 渲染 */}
+                <AutocompletePortal
+                  show={showSuggestions && suggestions.length > 0}
+                  anchorRef={inputRef}
+                  onClose={() => {
+                    setShowSuggestions(false);
+                    setHighlightedIndex(-1);
+                  }}
+                >
+                  <div
+                    ref={suggestionsRef}
+                    className="bg-white dark:bg-slate-800 border border-gray-200 dark:border-gray-600 rounded-lg shadow-2xl max-h-60 overflow-y-auto"
+                    style={{
+                      boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
+                    }}
+                  >
+                    {suggestions.map((suggestion, index) => (
+                      <div
+                        key={suggestion}
+                        className={`px-4 py-3 cursor-pointer transition-colors text-sm ${
+                          index === highlightedIndex
+                            ? 'bg-primary text-white'
+                            : 'hover:bg-primary/10 dark:hover:bg-primary/20 text-text-light dark:text-text-dark'
+                        }`}
+                        onClick={() => selectSuggestion(suggestion)}
+                        onMouseEnter={() => setHighlightedIndex(index)}
+                      >
+                        {suggestion}
+                      </div>
+                    ))}
+                  </div>
+                </AutocompletePortal>
 
                 {/* 搜索提示条 */}
                 {searchMessage.show && (
