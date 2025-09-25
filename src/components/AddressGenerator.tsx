@@ -172,15 +172,21 @@ export default function AddressGenerator() {
 
   const handleGenerate = async () => {
     const country = currentCountry;
+    
+    // 构建请求体，如果搜索框有值则包含 place 参数
+    const requestBody: { country: string; place?: string } = { country };
+    if (searchQuery.trim()) {
+      requestBody.place = searchQuery.trim();
+    }
 
     try {
-      console.log('Generating new data for country:', country);
+      console.log('Generating new data for country:', country, searchQuery.trim() ? `with place: ${searchQuery.trim()}` : '');
       const response = await fetch('/api/address/info', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ country }),
+        body: JSON.stringify(requestBody),
       });
 
       if (response.ok) {
