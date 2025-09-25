@@ -1,5 +1,5 @@
 import AddressGenerator from '@/components/AddressGenerator';
 
-export default function Home() {
+export default function SingaporeAddressPage() {
   return <AddressGenerator />;
 }
