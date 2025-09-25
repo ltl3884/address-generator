@@ -5,6 +5,7 @@ import { AddressService } from '@/lib/services/addressService';
 // 请求验证schema
 const AddressRequestSchema = z.object({
   country: z.string().min(1, 'Country parameter is required'),
+  place: z.string().optional(),
 });
 
 // 响应数据类型
@@ -43,17 +44,32 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(response, { status: 400 });
     }
 
-    const { country } = validationResult.data;
+    const { country, place } = validationResult.data;
 
-    // 使用服务层获取随机地址
-    const addressData = await AddressService.getRandomAddressByCountry(country);
+    let addressData;
 
-    if (!addressData) {
-      const response: ApiResponse<null> = {
-        code: 404,
-        message: `No address found for country: ${country}`,
-      };
-      return NextResponse.json(response, { status: 200 });
+    if (place && place.trim()) {
+      // 如果有place参数，执行地点搜索
+      addressData = await AddressService.getAddressByCountryAndPlace(country, place.trim());
+
+      if (!addressData) {
+        const response: ApiResponse<null> = {
+          code: 404,
+          message: 'No address found for the specified location',
+        };
+        return NextResponse.json(response, { status: 200 });
+      }
+    } else {
+      // 没有place参数，使用随机选择
+      addressData = await AddressService.getRandomAddressByCountry(country);
+
+      if (!addressData) {
+        const response: ApiResponse<null> = {
+          code: 404,
+          message: `No address found for country: ${country}`,
+        };
+        return NextResponse.json(response, { status: 200 });
+      }
     }
 
     // 构造响应数据

@@ -26,6 +26,8 @@ export default function AddressGenerator() {
   const [isDark, setIsDark] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [copySuccess, setCopySuccess] = useState(false);
+  const [isSearching, setIsSearching] = useState(false);
+  const [searchError, setSearchError] = useState('');
   const [addressData, setAddressData] = useState<AddressData>({
     fullName: '',
     gender: '',
@@ -189,9 +191,54 @@ export default function AddressGenerator() {
     alert('地址信息已保存！');
   };
 
-  const handleSearch = () => {
-    // Mock search functionality
-    alert(`搜索: ${searchQuery}`);
+  const handleSearch = async () => {
+    // 输入验证
+    if (!searchQuery.trim()) {
+      alert('请输入搜索内容');
+      return;
+    }
+
+    setIsSearching(true);
+    setSearchError('');
+
+    try {
+      console.log('Searching for:', searchQuery);
+      const response = await fetch('/api/address/info', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          country: getCurrentCountry(),
+          place: searchQuery.trim()
+        }),
+      });
+
+      if (response.ok) {
+        const apiResponse: ApiResponse = await response.json();
+        console.log('Search API Response:', apiResponse);
+
+        if (apiResponse.code === 200 && apiResponse.data) {
+          setAddressData(apiResponse.data);
+          console.log('Search results loaded successfully:', apiResponse.data);
+        } else if (apiResponse.code === 404) {
+          // 无搜索结果
+          alert('结果为空');
+        } else {
+          setSearchError(apiResponse.message || '搜索失败');
+          alert(apiResponse.message || '搜索失败');
+        }
+      } else {
+        setSearchError('搜索服务不可用');
+        alert('搜索服务不可用');
+      }
+    } catch (error) {
+      console.error('Error searching address data:', error);
+      setSearchError('搜索失败，请重试');
+      alert('搜索失败，请重试');
+    } finally {
+      setIsSearching(false);
+    }
   };
 
   const handleCopyAddress = async () => {
@@ -280,10 +327,13 @@ export default function AddressGenerator() {
                   onChange={(e) => setSearchQuery(e.target.value)}
                 />
                 <button
-                  className="bg-primary text-white px-6 py-3 rounded-md font-medium hover:bg-primary-600 transition-colors text-sm"
+                  className={`bg-primary text-white px-6 py-3 rounded-md font-medium transition-colors text-sm ${
+                    isSearching ? 'opacity-75 cursor-not-allowed' : 'hover:bg-primary-600'
+                  }`}
                   onClick={handleSearch}
+                  disabled={isSearching}
                 >
-                  搜索
+                  {isSearching ? '搜索中...' : '搜索'}
                 </button>
               </div>
             </div>

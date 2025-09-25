@@ -72,4 +72,64 @@ export class AddressService {
     }
   }
 
+  /**
+   * 根据国家和地点搜索地址信息
+   * @param country 国家代码
+   * @param place 地点名称（城市、州名或州全称）
+   * @returns 地址信息或null
+   */
+  static async getAddressByCountryAndPlace(country: string, place: string): Promise<AddressData | null> {
+    try {
+      // 清理参数
+      const cleanCountry = country.replace(/\//g, '').trim();
+      const cleanPlace = place.trim();
+
+      // 使用原生SQL查询实现地点搜索（MySQL语法）
+      const addressInfo = await prisma.$queryRaw`
+        SELECT * FROM address_info
+        WHERE country = ${cleanCountry}
+        AND (
+          city = ${cleanPlace}
+          OR state = ${cleanPlace}
+          OR state_full = ${cleanPlace}
+        )
+        ORDER BY RAND()
+        LIMIT 1
+      ` as Array<{
+        full_name: string;
+        gender: string;
+        birthday: string;
+        address: string;
+        telephone: string | null;
+        city: string | null;
+        zip_code: string | null;
+        state: string | null;
+        state_full: string | null;
+        country: string;
+      }>;
+
+      if (addressInfo.length === 0) {
+        return null;
+      }
+
+      const address = addressInfo[0];
+
+      return {
+        fullName: address.full_name,
+        gender: address.gender,
+        birthday: address.birthday,
+        address: address.address,
+        telephone: address.telephone || '',
+        city: address.city || '',
+        zipCode: address.zip_code || '',
+        state: address.state || '',
+        stateFull: address.state_full || '',
+        country: address.country,
+      };
+    } catch (error) {
+      console.error('Error searching address by place:', error);
+      throw error;
+    }
+  }
+
 }
