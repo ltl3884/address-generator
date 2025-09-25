@@ -28,6 +28,9 @@ export default function AddressGenerator() {
   const [copySuccess, setCopySuccess] = useState(false);
   const [isSearching, setIsSearching] = useState(false);
   const [searchError, setSearchError] = useState('');
+  const [searchMessage, setSearchMessage] = useState<{ show: boolean; text: string; type: 'error' | 'info' }>({ show: false, text: '', type: 'info' });
+  const [currentCountry, setCurrentCountry] = useState('us'); // 添加当前国家状态
+  const [isClient, setIsClient] = useState(false); // 添加客户端状态标识
   const [addressData, setAddressData] = useState<AddressData>({
     fullName: '',
     gender: '',
@@ -49,6 +52,13 @@ export default function AddressGenerator() {
     const country = path.replace(/^\//, '') || 'us';
     return country;
   };
+
+  // 客户端初始化
+  useEffect(() => {
+    setIsClient(true);
+    const country = getCurrentCountry();
+    setCurrentCountry(country);
+  }, []);
 
   // 使用localStorage缓存已请求的数据
   const getCachedData = (country: string): AddressData | null => {
@@ -72,28 +82,26 @@ export default function AddressGenerator() {
 
   // 监听路由变化获取数据
   useEffect(() => {
-    if (typeof window === 'undefined') return;
-
-    const country = getCurrentCountry();
+    if (!isClient) return;
 
     // 如果已经缓存了这个国家的数据，直接使用
-    const cached = getCachedData(country);
+    const cached = getCachedData(currentCountry);
     if (cached) {
       setAddressData(cached);
-      console.log('Using cached data for country:', country);
+      console.log('Using cached data for country:', currentCountry);
       return;
     }
 
     // Fetch address data from API via Next.js proxy
     const fetchAddressData = async () => {
       try {
-        console.log('Fetching new data for country:', country);
+        console.log('Fetching new data for country:', currentCountry);
         const response = await fetch('/api/address/info', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ country }),
+          body: JSON.stringify({ country: currentCountry }),
         });
 
         if (response.ok) {
@@ -103,7 +111,7 @@ export default function AddressGenerator() {
           if (apiResponse.code === 200 && apiResponse.data) {
             setAddressData(apiResponse.data);
             // 缓存数据
-            setCachedData(country, apiResponse.data);
+            setCachedData(currentCountry, apiResponse.data);
             console.log('Address data loaded and cached successfully:', apiResponse.data);
           } else {
             console.log('API returned non-200 code or no data:', apiResponse.message);
@@ -118,7 +126,7 @@ export default function AddressGenerator() {
     };
 
     fetchAddressData();
-  }, []); // 空依赖数组确保只在组件挂载时执行一次
+  }, [isClient, currentCountry]); // 依赖于 isClient 和 currentCountry
 
   // 主题设置效果
   useEffect(() => {
@@ -154,7 +162,7 @@ export default function AddressGenerator() {
   };
 
   const handleGenerate = async () => {
-    const country = getCurrentCountry();
+    const country = currentCountry;
 
     try {
       console.log('Generating new data for country:', country);
@@ -191,15 +199,25 @@ export default function AddressGenerator() {
     alert('地址信息已保存！');
   };
 
+  // 显示搜索消息的函数
+  const showSearchMessage = (text: string, type: 'error' | 'info' = 'error') => {
+    setSearchMessage({ show: true, text, type });
+    // 3秒后自动隐藏
+    setTimeout(() => {
+      setSearchMessage(prev => ({ ...prev, show: false }));
+    }, 3000);
+  };
+
   const handleSearch = async () => {
     // 输入验证
     if (!searchQuery.trim()) {
-      alert('请输入搜索内容');
+      showSearchMessage('请输入搜索内容', 'error');
       return;
     }
 
     setIsSearching(true);
     setSearchError('');
+    setSearchMessage({ show: false, text: '', type: 'info' });
 
     try {
       console.log('Searching for:', searchQuery);
@@ -209,7 +227,7 @@ export default function AddressGenerator() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          country: getCurrentCountry(),
+          country: currentCountry,
           place: searchQuery.trim()
         }),
       });
@@ -223,19 +241,19 @@ export default function AddressGenerator() {
           console.log('Search results loaded successfully:', apiResponse.data);
         } else if (apiResponse.code === 404) {
           // 无搜索结果
-          alert('结果为空');
+          showSearchMessage('结果为空', 'error');
         } else {
           setSearchError(apiResponse.message || '搜索失败');
-          alert(apiResponse.message || '搜索失败');
+          showSearchMessage(apiResponse.message || '搜索失败', 'error');
         }
       } else {
         setSearchError('搜索服务不可用');
-        alert('搜索服务不可用');
+        showSearchMessage('搜索服务不可用', 'error');
       }
     } catch (error) {
       console.error('Error searching address data:', error);
       setSearchError('搜索失败，请重试');
-      alert('搜索失败，请重试');
+      showSearchMessage('搜索失败，请重试', 'error');
     } finally {
       setIsSearching(false);
     }
@@ -318,23 +336,44 @@ export default function AddressGenerator() {
             {/* Search Section */}
             <div className="border-b border-border-light dark:border-border-dark pb-6 mb-6">
               <h2 className="text-lg font-semibold text-primary mb-4">搜索</h2>
-              <div className="flex items-center space-x-3">
-                <input
-                  className="flex-grow p-3 border border-border-light dark:border-border-dark rounded-md bg-background-light dark:bg-background-dark focus:ring-2 focus:ring-primary focus:border-primary transition-colors text-sm"
-                  placeholder="输入城市名或州名搜索"
-                  type="text"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                />
-                <button
-                  className={`bg-primary text-white px-6 py-3 rounded-md font-medium transition-colors text-sm ${
-                    isSearching ? 'opacity-75 cursor-not-allowed' : 'hover:bg-primary-600'
-                  }`}
-                  onClick={handleSearch}
-                  disabled={isSearching}
-                >
-                  {isSearching ? '搜索中...' : '搜索'}
-                </button>
+              <div className="space-y-3">
+                <div className="flex items-center space-x-3">
+                  <input
+                    className="flex-grow p-3 border border-border-light dark:border-border-dark rounded-md bg-background-light dark:bg-background-dark focus:ring-2 focus:ring-primary focus:border-primary transition-colors text-sm"
+                    placeholder="输入城市名或州名搜索"
+                    type="text"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                  />
+                  <button
+                    className={`bg-primary text-white px-6 py-3 rounded-md font-medium transition-colors text-sm ${
+                      isSearching ? 'opacity-75 cursor-not-allowed' : 'hover:bg-primary-600'
+                    }`}
+                    onClick={handleSearch}
+                    disabled={isSearching}
+                  >
+                    {isSearching ? '搜索中...' : '搜索'}
+                  </button>
+                </div>
+
+                {/* 搜索提示条 */}
+                {searchMessage.show && (
+                  <div className={`
+                    p-3 rounded-md text-sm transition-all duration-300 ease-in-out
+                    ${searchMessage.type === 'error'
+                      ? 'bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-300 border border-red-200 dark:border-red-800'
+                      : 'bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800'
+                    }
+                    backdrop-blur-sm
+                  `}>
+                    <div className="flex items-center space-x-2">
+                      <span className="material-icons text-sm">
+                        {searchMessage.type === 'error' ? 'error_outline' : 'info'}
+                      </span>
+                      <span>{searchMessage.text}</span>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
 
@@ -377,7 +416,7 @@ export default function AddressGenerator() {
               </div>
               <div className="flex border-b border-dashed border-border-light dark:border-border-dark py-3">
                 <span className="w-20 text-subtle-light dark:text-subtle-dark">州/省</span>
-                <span className="flex-1 text-text-light dark:text-text-dark">{getCurrentCountry() === 'us' ? `${addressData.stateFull}(${addressData.state})` : addressData.state}</span>
+                <span className="flex-1 text-text-light dark:text-text-dark">{!isClient ? addressData.state : currentCountry === 'us' ? `${addressData.stateFull}(${addressData.state})` : addressData.state}</span>
               </div>
               <div className="flex border-b border-dashed border-border-light dark:border-border-dark py-3">
                 <span className="w-20 text-subtle-light dark:text-subtle-dark">地址</span>
@@ -394,7 +433,16 @@ export default function AddressGenerator() {
               <div className="flex border-b border-dashed border-border-light dark:border-border-dark py-3 md:col-span-2">
                 <span className="w-20 text-subtle-light dark:text-subtle-dark">完整地址</span>
                 <div className="flex-1 flex items-center">
-                  <span className="text-text-light dark:text-text-dark">{addressData.address}, {addressData.city}, {addressData.state} {addressData.zipCode}</span>
+                  <span className="text-text-light dark:text-text-dark">
+                    {!isClient 
+                      ? `${addressData.address}, ${addressData.city}, ${addressData.state} ${addressData.zipCode}`
+                      : currentCountry === 'sg' 
+                        ? addressData.address 
+                        : (currentCountry === 'tw' || currentCountry === 'hk')
+                          ? `${addressData.address}, ${addressData.city}, ${addressData.zipCode}`
+                          : `${addressData.address}, ${addressData.city}, ${addressData.state} ${addressData.zipCode}`
+                    }
+                  </span>
                   <button
                     onClick={handleCopyAddress}
                     className={`
