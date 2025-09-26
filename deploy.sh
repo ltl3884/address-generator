@@ -75,6 +75,10 @@ print_error() {
     echo -e "${RED}[ERROR]${NC} $1"
 }
 
+print_success() {
+    echo -e "${GREEN}[SUCCESS]${NC} $1"
+}
+
 # 检查 Node.js 版本
 check_node() {
     if ! command -v node &> /dev/null; then
@@ -134,6 +138,7 @@ build_app() {
 migrate_database() {
     # print_status "执行数据库迁移..."
     # npx prisma migrate deploy
+    :
 }
 
 # 停止现有进程
