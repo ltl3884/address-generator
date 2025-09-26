@@ -20,6 +20,23 @@ export interface AddressData {
 
 export class AddressService {
   /**
+   * 将字符串转换为标题格式
+   * @param str 要转换的字符串
+   * @returns 标题格式的字符串（每个单词首字母大写）
+   */
+  static to_camel(str: string): string {
+    if (!str) return '';
+    
+    return str
+      .toLowerCase()
+      .split(/[\s\-_]+/) // 按空格、连字符、下划线分割
+      .map(word => {
+        if (word.length === 0) return word;
+        return word.charAt(0).toUpperCase() + word.slice(1); // 每个单词首字母大写
+      })
+      .join(' '); // 用空格连接单词
+  }
+  /**
    * 根据国家随机获取地址信息
    * @param country 国家代码
    * @returns 随机地址信息或null
@@ -60,7 +77,7 @@ export class AddressService {
         birthday: address.birthday,
         address: address.address,
         telephone: address.telephone || '',
-        city: address.city || '',
+        city: AddressService.to_camel(address.city || ''),
         zipCode: address.zip_code || '',
         state: address.state || '',
         stateFull: address.state_full || '',
@@ -120,7 +137,7 @@ export class AddressService {
         birthday: address.birthday,
         address: address.address,
         telephone: address.telephone || '',
-        city: address.city || '',
+        city: AddressService.to_camel(address.city || ''),
         zipCode: address.zip_code || '',
         state: address.state || '',
         stateFull: address.state_full || '',

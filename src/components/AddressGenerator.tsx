@@ -434,6 +434,17 @@ export default function AddressGenerator() {
     }
   };
 
+  const handleClear = () => {
+    setSearchQuery('');
+    setShowSuggestions(false);
+    setSuggestions([]);
+    setHighlightedIndex(-1);
+    setSearchMessage({ show: false, text: '', type: 'info' });
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
+  };
+
   const handleCopyAddress = async () => {
     const fullAddress = `${addressData.address}, ${addressData.city}, ${addressData.state} ${addressData.zipCode}`;
     
@@ -530,6 +541,14 @@ export default function AddressGenerator() {
                     disabled={isSearching}
                   >
                     {isSearching ? '搜索中...' : '搜索'}
+                  </button>
+                  <button
+                    className="bg-gray-500 dark:bg-gray-600 text-white px-6 py-3 rounded-md font-medium transition-colors text-sm hover:bg-gray-600 dark:hover:bg-gray-700"
+                    onClick={handleClear}
+                    disabled={isSearching}
+                    aria-label="清空搜索内容"
+                  >
+                    清空
                   </button>
                 </div>
 
