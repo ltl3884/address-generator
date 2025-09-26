@@ -1,7 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  output: 'export',
+  // 移除 output 配置，使用默认模式支持 API 路由和直接部署
   images: {
     unoptimized: true
   },
