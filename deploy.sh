@@ -164,8 +164,13 @@ start_app() {
     # 保存 PM2 配置
     pm2 save
     
-    # 设置开机自启
-    pm2 startup
+    # 设置开机自启（可能需要 sudo，失败时不阻断后续流程）
+    if pm2 startup; then
+        print_status "PM2 开机自启脚本已配置"
+    else
+        print_warning "PM2 开机自启配置失败或需要 sudo。您可以稍后手动执行："
+        print_warning "sudo env PATH=$PATH pm2 startup systemd -u $(whoami) --hp $HOME"
+    fi
 }
 
 # 配置 Nginx
