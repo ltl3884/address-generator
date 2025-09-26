@@ -88,6 +88,7 @@ export async function generateStaticParams() {
 
 export default function USStatePage({ params }: USStatePageProps) {
   // AddressGenerator组件会自动从URL路径中解析州名参数
-  // 所以这里不需要显式传递参数
+  // params 参数用于静态生成，组件内部通过路由解析
+  console.log('State page accessed for:', params.state);
   return <AddressGenerator />;
 }
