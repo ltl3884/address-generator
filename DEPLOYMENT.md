@@ -79,8 +79,63 @@ sudo systemctl restart nginx
 - Safari (最新版本)
 - Edge (最新版本)
 
+## 生产环境配置
+
+### 环境变量配置
+
+项目包含以下环境配置文件：
+- `.env` - 基础配置模板
+- `.env.local` - 开发环境配置
+- `.env.production` - 生产环境配置
+
+#### Ubuntu生产环境部署
+
+1. **使用 .env.production 文件（推荐）**：
+```bash
+# 复制生产环境配置
+cp .env.production .env
+
+# 编辑数据库连接信息
+nano .env
+```
+
+2. **系统环境变量配置**：
+```bash
+# 编辑用户环境变量
+nano ~/.bashrc
+
+# 添加环境变量
+export NODE_ENV="production"
+export DATABASE_URL="mysql://prod_user:password@localhost:3306/address_collector_prod"
+export LOG_LEVEL="error"
+
+# 重新加载配置
+source ~/.bashrc
+```
+
+详细的Ubuntu部署指南请参考：[ubuntu-deployment-guide.md](./ubuntu-deployment-guide.md)
+
+### Docker环境变量
+
+使用Docker部署时，可以通过以下方式配置环境变量：
+
+```bash
+# 方法1: 使用环境变量文件
+docker run --env-file .env.production -p 80:80 address-generator
+
+# 方法2: 直接传递环境变量
+docker run -e NODE_ENV=production \
+           -e DATABASE_URL="mysql://user:pass@host:3306/db" \
+           -p 80:80 address-generator
+
+# 方法3: 使用docker-compose
+# 参考项目中的 docker-compose.yml 文件
+```
+
 ## 注意事项
 
 - 应用已配置为静态导出，所有页面都会预渲染为HTML文件
 - 主题切换功能使用localStorage保存用户偏好
 - 所有交互功能都在客户端运行，无需后端API
+- **不需要配置 .env.prod 文件**，使用 `.env.production` 即可
+- 生产环境建议使用系统环境变量或容器环境变量管理敏感信息
