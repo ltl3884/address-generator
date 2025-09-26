@@ -79,6 +79,26 @@ print_success() {
     echo -e "${GREEN}[SUCCESS]${NC} $1"
 }
 
+# 统一的 y/n 交互函数，解决上一次回车残留导致读入空行的问题
+ask_yes_no() {
+    local prompt_msg="$1"
+    local __resultvar="$2"
+    local input=""
+
+    # 清空输入缓冲，丢弃上一次操作残留的回车/字符
+    while read -r -t 0.001 -n 10000 _rest; do :; done
+
+    while true; do
+        read -r -p "$prompt_msg " -n 1 input || true
+        echo
+        if [[ "$input" =~ ^[YyNn]$ ]]; then
+            eval "$__resultvar='$input'"
+            return 0
+        fi
+        echo "请输入 y 或 n" 1>&2
+    done
+}
+
 # 检查 Node.js 版本
 check_node() {
     if ! command -v node &> /dev/null; then
@@ -232,8 +252,7 @@ main() {
     build_app
     
     # 询问是否清理开发依赖（节省磁盘空间）
-    read -p "是否清理开发依赖以节省磁盘空间? (y/n): " -n 1 -r
-    echo
+    ask_yes_no "是否清理开发依赖以节省磁盘空间? (y/n):" REPLY
     if [[ $REPLY =~ ^[Yy]$ ]]; then
         cleanup_dev_dependencies
     fi
@@ -243,8 +262,7 @@ main() {
     start_app
     
     # 询问是否配置 Nginx
-    read -p "是否需要配置 Nginx? (y/n): " -n 1 -r
-    echo
+    ask_yes_no "是否需要配置 Nginx? (y/n):" REPLY
     if [[ $REPLY =~ ^[Yy]$ ]]; then
         configure_nginx
     fi
