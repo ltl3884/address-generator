@@ -173,7 +173,7 @@ start_app() {
     print_status "启动应用..."
     
     # 更新 PM2 配置中的路径
-    sed -i "s|/path/to/your/app|$(pwd)|g" ecosystem.config.js
+    sed -i "s|/opt/backend/address-generator|$(pwd)|g" ecosystem.config.js
     
     # 创建日志目录
     mkdir -p logs

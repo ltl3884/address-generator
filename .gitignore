@@ -194,3 +194,5 @@ temp/
 /src/generated/prisma
 
 .env.production
+address-generator.xyz.crt
+address-generator.xyz.key
