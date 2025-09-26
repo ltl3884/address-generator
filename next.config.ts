@@ -6,6 +6,8 @@ const nextConfig: NextConfig = {
     unoptimized: true
   },
   assetPrefix: process.env.NODE_ENV === 'production' ? '' : '',
+  trailingSlash: true,
+  skipTrailingSlashRedirect: true,
   experimental: {
     optimizePackageImports: [],
   },

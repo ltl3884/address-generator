@@ -18,6 +18,21 @@ interface AddressData {
   country: string;
 }
 
+interface SavedAddress {
+  id: string;
+  fullName: string;
+  gender: string;
+  birthday: string;
+  city: string;
+  state: string;
+  address: string;
+  zipCode: string;
+  telephone: string;
+  fullAddress: string;
+  country: string;
+  createdAt: number;
+}
+
 interface ApiResponse {
   code: number;
   message: string;
@@ -31,7 +46,9 @@ export default function AddressGenerator() {
   const [isSearching, setIsSearching] = useState(false);
   // const [searchError, setSearchError] = useState(''); // 暂时未使用，注释掉
   const [searchMessage, setSearchMessage] = useState<{ show: boolean; text: string; type: 'error' | 'info' }>({ show: false, text: '', type: 'info' });
+  const [saveMessage, setSaveMessage] = useState<{ show: boolean; text: string; type: 'error' | 'info' }>({ show: false, text: '', type: 'info' });
   const [currentCountry, setCurrentCountry] = useState('us'); // 添加当前国家状态
+  const [currentPlace, setCurrentPlace] = useState(''); // 添加当前地点状态
   const [isClient, setIsClient] = useState(false); // 添加客户端状态标识
 
   // 自动补全相关状态
@@ -53,37 +70,60 @@ export default function AddressGenerator() {
     country: ''
   });
 
-  // 获取当前路径对应的国家代码
-  const getCurrentCountry = () => {
-    if (typeof window === 'undefined') return 'us';
+  // 获取当前路径对应的国家代码和地点
+  const parseCurrentPath = () => {
+    if (typeof window === 'undefined') return { country: 'us', place: '' };
     const path = window.location.pathname;
-    // 移除开头的/，如果为空则是根路径，默认返回us
-    const country = path.replace(/^\//, '') || 'us';
-    return country;
+    // 移除开头的/，分割路径
+    const pathParts = path.replace(/^\//, '').split('/').filter(Boolean);
+    
+    if (pathParts.length === 0) {
+      // 根路径，默认返回us
+      return { country: 'us', place: '' };
+    } else if (pathParts.length === 1) {
+      // 只有国家代码，如 /us
+      return { country: pathParts[0], place: '' };
+    } else if (pathParts.length === 2) {
+      // 有国家代码和地点，如 /us/AL
+      // 对地点参数进行URL解码，处理空格等特殊字符
+      return { country: pathParts[0], place: decodeURIComponent(pathParts[1]) };
+    } else {
+      // 其他情况，取前两个部分
+      // 对地点参数进行URL解码，处理空格等特殊字符
+      return { country: pathParts[0], place: decodeURIComponent(pathParts[1]) };
+    }
   };
 
   // 客户端初始化
   useEffect(() => {
     setIsClient(true);
-    const country = getCurrentCountry();
+    const { country, place } = parseCurrentPath();
     setCurrentCountry(country);
+    setCurrentPlace(place);
+    
+    // 设置搜索框的默认值为路径的最后一个部分
+    if (place) {
+      setSearchQuery(place);
+    }
   }, []);
 
   // 使用localStorage缓存已请求的数据
-  const getCachedData = (country: string): AddressData | null => {
+  const getCachedData = (country: string, place?: string): AddressData | null => {
     if (typeof window === 'undefined') return null;
     try {
-      const cached = localStorage.getItem('addressData_' + country);
+      const cacheKey = place ? `addressData_${country}_${place}` : `addressData_${country}`;
+      const cached = localStorage.getItem(cacheKey);
       return cached ? JSON.parse(cached) : null;
     } catch {
       return null;
     }
   };
 
-  const setCachedData = (country: string, data: AddressData) => {
+  const setCachedData = (country: string, data: AddressData, place?: string) => {
     if (typeof window === 'undefined') return;
     try {
-      localStorage.setItem('addressData_' + country, JSON.stringify(data));
+      const cacheKey = place ? `addressData_${country}_${place}` : `addressData_${country}`;
+      localStorage.setItem(cacheKey, JSON.stringify(data));
     } catch (error) {
       console.error('Failed to cache data:', error);
     }
@@ -93,24 +133,30 @@ export default function AddressGenerator() {
   useEffect(() => {
     if (!isClient) return;
 
-    // 如果已经缓存了这个国家的数据，直接使用
-    const cached = getCachedData(currentCountry);
+    // 如果已经缓存了这个国家和地点的数据，直接使用
+    const cached = getCachedData(currentCountry, currentPlace);
     if (cached) {
       setAddressData(cached);
-      console.log('Using cached data for country:', currentCountry);
+      console.log('Using cached data for country:', currentCountry, currentPlace ? `with place: ${currentPlace}` : '');
       return;
     }
 
     // Fetch address data from API via Next.js proxy
     const fetchAddressData = async () => {
       try {
-        console.log('Fetching new data for country:', currentCountry);
+        // 构建请求体，如果有place参数则包含
+        const requestBody: { country: string; place?: string } = { country: currentCountry };
+        if (currentPlace.trim()) {
+          requestBody.place = currentPlace.trim();
+        }
+        
+        console.log('Fetching new data for country:', currentCountry, currentPlace ? `with place: ${currentPlace}` : '');
         const response = await fetch('/api/address/info', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ country: currentCountry }),
+          body: JSON.stringify(requestBody),
         });
 
         if (response.ok) {
@@ -120,7 +166,7 @@ export default function AddressGenerator() {
           if (apiResponse.code === 200 && apiResponse.data) {
             setAddressData(apiResponse.data);
             // 缓存数据
-            setCachedData(currentCountry, apiResponse.data);
+            setCachedData(currentCountry, apiResponse.data, currentPlace);
             console.log('Address data loaded and cached successfully:', apiResponse.data);
           } else {
             console.log('API returned non-200 code or no data:', apiResponse.message);
@@ -135,7 +181,7 @@ export default function AddressGenerator() {
     };
 
     fetchAddressData();
-  }, [isClient, currentCountry]); // 依赖于 isClient 和 currentCountry
+  }, [isClient, currentCountry, currentPlace]); // 依赖于 isClient、currentCountry 和 currentPlace
 
   // 主题设置效果
   useEffect(() => {
@@ -210,8 +256,43 @@ export default function AddressGenerator() {
   };
 
   const handleSave = () => {
-    // Mock save functionality
-    alert('地址信息已保存！');
+    // 生成完整地址
+    const fullAddress = !isClient
+      ? `${addressData.address}, ${addressData.city}, ${addressData.state} ${addressData.zipCode}`
+      : currentCountry === 'sg'
+        ? addressData.address
+        : (currentCountry === 'tw' || currentCountry === 'hk')
+          ? `${addressData.address}, ${addressData.city}, ${addressData.zipCode}`
+          : `${addressData.address}, ${addressData.city}, ${addressData.state} ${addressData.zipCode}`;
+
+    // 创建保存的地址对象
+    const savedAddress: SavedAddress = {
+      id: Date.now().toString(), // 使用时间戳作为唯一ID
+      fullName: addressData.fullName,
+      gender: addressData.gender,
+      birthday: addressData.birthday,
+      city: addressData.city,
+      state: addressData.state,
+      address: addressData.address,
+      zipCode: addressData.zipCode,
+      telephone: addressData.telephone,
+      fullAddress: fullAddress,
+      country: addressData.country,
+      createdAt: Date.now()
+    };
+
+    // 保存到LocalStorage
+    try {
+      const existingAddresses = JSON.parse(localStorage.getItem('savedAddresses') || '[]');
+      existingAddresses.push(savedAddress);
+      localStorage.setItem('savedAddresses', JSON.stringify(existingAddresses));
+
+      // 显示成功提示
+      showSaveMessage('地址信息已保存！', 'info');
+    } catch (error) {
+      console.error('保存地址失败:', error);
+      showSaveMessage('保存地址失败，请重试', 'error');
+    }
   };
 
   // 显示搜索消息的函数
@@ -220,6 +301,15 @@ export default function AddressGenerator() {
     // 3秒后自动隐藏
     setTimeout(() => {
       setSearchMessage(prev => ({ ...prev, show: false }));
+    }, 3000);
+  };
+
+  // 显示保存消息的函数
+  const showSaveMessage = (text: string, type: 'error' | 'info' = 'info') => {
+    setSaveMessage({ show: true, text, type });
+    // 3秒后自动隐藏
+    setTimeout(() => {
+      setSaveMessage(prev => ({ ...prev, show: false }));
     }, 3000);
   };
 
@@ -494,6 +584,25 @@ export default function AddressGenerator() {
                     </div>
                   </div>
                 )}
+
+                {/* 保存提示条 */}
+                {saveMessage.show && (
+                  <div className={`
+                    p-3 rounded-md text-sm transition-all duration-300 ease-in-out
+                    ${saveMessage.type === 'error'
+                      ? 'bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-300 border border-red-200 dark:border-red-800'
+                      : 'bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-300 border border-green-200 dark:border-green-800'
+                    }
+                    backdrop-blur-sm
+                  `}>
+                    <div className="flex items-center space-x-2">
+                      <span className="material-icons text-sm">
+                        {saveMessage.type === 'error' ? 'error_outline' : 'check_circle'}
+                      </span>
+                      <span>{saveMessage.text}</span>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
 
@@ -513,6 +622,12 @@ export default function AddressGenerator() {
                 >
                   保存
                 </button>
+                <Link
+                  href="/my_address"
+                  className="bg-primary text-white px-4 py-2 rounded-md font-medium text-sm hover:bg-primary-600 transition-colors"
+                >
+                  我的保存地址
+                </Link>
               </div>
             </div>
 
@@ -588,18 +703,94 @@ export default function AddressGenerator() {
           {/* Sidebar */}
           <aside className="space-y-6">
             <div className="bg-surface-light dark:glass-morphism p-4 rounded-lg shadow-card dark:shadow-glass border border-border-light dark:border-border-glass backdrop-blur-glass">
-              <h3 className="text-lg font-semibold text-primary border-b border-border-light dark:border-border-dark pb-3 mb-4">热门州/城市地址</h3>
+              <h3 className="text-lg font-semibold text-primary border-b border-border-light dark:border-border-dark pb-3 mb-4">美国免消费税州</h3>
               <ul className="space-y-1 text-sm">
-                <li><a className="block p-2 rounded-md text-subtle-light dark:text-subtle-dark hover:bg-primary hover:text-white transition-colors" href="#">加利福尼亚州地址</a></li>
-                <li><a className="block p-2 rounded-md text-subtle-light dark:text-subtle-dark hover:bg-primary hover:text-white transition-colors" href="#">德克萨斯州地址</a></li>
-                <li><a className="block p-2 rounded-md text-subtle-light dark:text-subtle-dark hover:bg-primary hover:text-white transition-colors" href="#">佛罗里达州地址</a></li>
-                <li><a className="block p-2 rounded-md text-subtle-light dark:text-subtle-dark hover:bg-primary hover:text-white transition-colors" href="#">纽约州地址</a></li>
-                <li><a className="block p-2 rounded-md text-subtle-light dark:text-subtle-dark hover:bg-primary hover:text-white transition-colors" href="#">宾夕法尼亚州地址</a></li>
-                <li><a className="block p-2 rounded-md text-subtle-light dark:text-subtle-dark hover:bg-primary hover:text-white transition-colors" href="#">伊利诺伊州地址</a></li>
-                <li><a className="block p-2 rounded-md text-subtle-light dark:text-subtle-dark hover:bg-primary hover:text-white transition-colors" href="#">俄亥俄州地址</a></li>
-                <li><a className="block p-2 rounded-md text-subtle-light dark:text-subtle-dark hover:bg-primary hover:text-white transition-colors" href="#">佐治亚州地址</a></li>
-                <li><a className="block p-2 rounded-md text-subtle-light dark:text-subtle-dark hover:bg-primary hover:text-white transition-colors" href="#">北卡罗来纳州地址</a></li>
-                <li><a className="block p-2 rounded-md text-subtle-light dark:text-subtle-dark hover:bg-primary hover:text-white transition-colors" href="#">密歇根州地址</a></li>
+                <li>
+                  <Link 
+                    className="block p-2 rounded-md text-subtle-light dark:text-subtle-dark hover:bg-primary hover:text-white transition-colors cursor-pointer" 
+                    href="/us/Alaska"
+                  >
+                    阿拉斯加州地址
+                  </Link>
+                </li>
+                <li>
+                  <Link 
+                    className="block p-2 rounded-md text-subtle-light dark:text-subtle-dark hover:bg-primary hover:text-white transition-colors cursor-pointer" 
+                    href="/us/Delaware"
+                  >
+                    特拉华州地址
+                  </Link>
+                </li>
+                <li>
+                  <Link 
+                    className="block p-2 rounded-md text-subtle-light dark:text-subtle-dark hover:bg-primary hover:text-white transition-colors cursor-pointer" 
+                    href="/us/Montana"
+                  >
+                    蒙大拿州地址
+                  </Link>
+                </li>
+                <li>
+                  <Link 
+                    className="block p-2 rounded-md text-subtle-light dark:text-subtle-dark hover:bg-primary hover:text-white transition-colors cursor-pointer" 
+                    href="/us/New Hampshire"
+                  >
+                    新罕布什尔州地址
+                  </Link>
+                </li>
+                <li>
+                  <Link 
+                    className="block p-2 rounded-md text-subtle-light dark:text-subtle-dark hover:bg-primary hover:text-white transition-colors cursor-pointer" 
+                    href="/us/Oregon"
+                  >
+                    俄勒冈州地址
+                  </Link>
+                </li>
+              </ul>
+            </div>
+
+            <div className="bg-surface-light dark:glass-morphism p-4 rounded-lg shadow-card dark:shadow-glass border border-border-light dark:border-border-glass backdrop-blur-glass">
+              <h3 className="text-lg font-semibold text-primary border-b border-border-light dark:border-border-dark pb-3 mb-4">美国热门城市</h3>
+              <ul className="space-y-1 text-sm">
+                <li>
+                  <Link 
+                    className="block p-2 rounded-md text-subtle-light dark:text-subtle-dark hover:bg-primary hover:text-white transition-colors cursor-pointer" 
+                    href="/us/New York"
+                  >
+                    纽约市地址
+                  </Link>
+                </li>
+                <li>
+                  <Link 
+                    className="block p-2 rounded-md text-subtle-light dark:text-subtle-dark hover:bg-primary hover:text-white transition-colors cursor-pointer" 
+                    href="/us/Los Angeles"
+                  >
+                    洛杉矶地址
+                  </Link>
+                </li>
+                <li>
+                  <Link 
+                    className="block p-2 rounded-md text-subtle-light dark:text-subtle-dark hover:bg-primary hover:text-white transition-colors cursor-pointer" 
+                    href="/us/Chicago"
+                  >
+                    芝加哥地址
+                  </Link>
+                </li>
+                <li>
+                  <Link 
+                    className="block p-2 rounded-md text-subtle-light dark:text-subtle-dark hover:bg-primary hover:text-white transition-colors cursor-pointer" 
+                    href="/us/Houston"
+                  >
+                    休斯顿地址
+                  </Link>
+                </li>
+                <li>
+                  <Link 
+                    className="block p-2 rounded-md text-subtle-light dark:text-subtle-dark hover:bg-primary hover:text-white transition-colors cursor-pointer" 
+                    href="/us/Phoenix"
+                  >
+                    凤凰城地址
+                  </Link>
+                </li>
               </ul>
             </div>
           </aside>
@@ -608,8 +799,8 @@ export default function AddressGenerator() {
         {/* Footer */}
         <footer className="mt-8 bg-surface-light dark:glass-morphism p-6 rounded-lg shadow-card dark:shadow-glass border border-border-light dark:border-border-glass backdrop-blur-glass text-sm">
           <div className="pt-4 text-center text-xs text-subtle-light dark:text-subtle-dark">
-            <p>Copyright © 2021 address-gen.ccc. All rights reserved.</p>
-            <p className="mt-1">美国地址生成的数据来自于各个大学学习, 学习资料以及部分网友的分享, 不用于任何商业用途, 仅供学习参考.</p>
+            <p>Copyright © 2025 address-generator.xyz. All rights reserved.</p>
+            <p className="mt-1">地址生成的数据来自于网上的公开资料, 不用于任何商业用途, 仅供学习参考.</p>
           </div>
         </footer>
       </div>
