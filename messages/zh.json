@@ -1,0 +1,182 @@
+{
+  "common": {
+    "title": "地址生成器 - 免费的虚拟地址生成工具",
+    "description": "免费的地址生成器，支持生成美国、加拿大、英国、新加坡、台湾、香港等地区的虚拟地址，适用于注册、测试等用途。",
+    "keywords": "地址生成器, 虚拟地址, 假地址, 随机地址, 测试地址, 美国地址, 加拿大地址, 英国地址, 新加坡地址, 台湾地址, 香港地址",
+    "generate": "生成",
+    "save": "保存",
+    "copy": "复制",
+    "delete": "删除",
+    "clear": "清空",
+    "search": "搜索",
+    "back": "返回",
+    "home": "首页",
+    "loading": "加载中...",
+    "error": "错误",
+    "success": "成功",
+    "confirm": "确认",
+    "cancel": "取消"
+  },
+  "theme": {
+    "light": "浅色模式",
+    "dark": "深色模式",
+    "switch_to_light": "切换到浅色模式",
+    "switch_to_dark": "切换到深色模式",
+    "light_mode": "浅色模式",
+    "dark_mode": "深色模式"
+  },
+  "header": {
+    "title": "地址生成器",
+    "subtitle": "免费的地址生成工具"
+  },
+  "search": {
+    "title": "搜索地址",
+    "placeholder": "搜索城市或州名...",
+    "button": "搜索",
+    "searching": "搜索中...",
+    "search": "搜索",
+    "clear": "清空",
+    "clear_aria": "清空搜索",
+    "clear_aria_label": "清空搜索",
+    "enter_search_content": "请输入搜索内容",
+    "no_results": "结果为空",
+    "search_failed": "搜索失败",
+    "service_unavailable": "搜索服务不可用",
+    "search_failed_retry": "搜索失败，请重试",
+    "clear_search": "清空搜索"
+  },
+  "address": {
+    "basic_info": "基本资料",
+    "full_name": "姓名",
+    "gender": "性别",
+    "birthday": "生日",
+    "city": "城市",
+    "state": "州/省",
+    "address": "地址",
+    "zip_code": "邮编",
+    "telephone": "电话号码",
+    "full_address": "完整地址",
+    "country": "国家"
+  },
+  "actions": {
+    "generate": "生成",
+    "save": "保存",
+    "generate_new": "生成新地址",
+    "save_address": "保存地址",
+    "copy_address": "复制地址",
+    "copy_full_address": "复制完整地址",
+    "copied": "已复制!",
+    "copied_full_address": "已复制完整地址",
+    "my_saved_addresses": "我的保存地址",
+    "address_saved": "地址信息已保存！",
+    "save_failed": "保存地址失败，请重试",
+    "copy_success": "地址已复制到剪贴板",
+    "copy_failed": "复制失败，请手动复制地址",
+    "copy_failed_manual": "复制失败，请手动复制地址"
+  },
+  "saved_addresses": {
+    "title": "我的保存地址",
+    "my_saved_addresses": "我的保存地址",
+    "no_addresses": "暂无保存的地址",
+    "delete_success": "地址删除成功",
+    "delete_failed": "删除地址失败，请重试",
+    "clear_all": "清空所有地址",
+    "clear_success": "所有地址已清空",
+    "clear_failed": "清空失败，请重试",
+    "load_failed": "读取保存的地址失败",
+    "created_at": "创建时间"
+  },
+  "navigation": {
+    "home": "首页",
+    "us_address": "美国地址",
+    "ca_address": "加拿大地址",
+    "uk_address": "英国地址",
+    "sg_address": "新加坡地址",
+    "tw_address": "台湾地址",
+    "hk_address": "香港地址",
+    "taiwan_address": "台湾地址",
+    "tax_free_states": "美国免消费税州",
+    "popular_cities": "美国热门城市",
+    "alaska_address": "阿拉斯加州地址",
+    "delaware_address": "特拉华州地址",
+    "montana_address": "蒙大拿州地址",
+    "new_hampshire_address": "新罕布什尔州地址",
+    "oregon_address": "俄勒冈州地址",
+    "new_york_address": "纽约市地址",
+    "los_angeles_address": "洛杉矶地址",
+    "chicago_address": "芝加哥地址",
+    "houston_address": "休斯顿地址",
+    "phoenix_address": "凤凰城地址",
+    "countries": {
+      "us": "美国",
+      "ca": "加拿大", 
+      "uk": "英国",
+      "sg": "新加坡",
+      "tw": "台湾",
+      "hk": "香港"
+    },
+    "us_states": {
+      "title": "美国热门州",
+      "california": "加利福尼亚州地址",
+      "texas": "德克萨斯州地址",
+      "florida": "佛罗里达州地址",
+      "new_york": "纽约州地址",
+      "new_hampshire": "新罕布什尔州地址",
+      "oregon": "俄勒冈州地址"
+    },
+    "us_cities": {
+      "title": "美国热门城市",
+      "new_york": "纽约市地址",
+      "los_angeles": "洛杉矶地址",
+      "chicago": "芝加哥地址",
+      "houston": "休斯顿地址",
+      "phoenix": "凤凰城地址"
+    }
+  },
+  "footer": {
+    "copyright": "Copyright © 2025 address-generator.xyz. All rights reserved.",
+    "disclaimer": "地址生成的数据来自于网上的公开资料, 不用于任何商业用途, 仅供学习参考."
+  },
+  "metadata": {
+    "title": "美国地址生成器 - 美国身份生成器 - Address Generator",
+    "description": "免费的美国地址生成器，支持生成真实的美国地址信息，美国身份信息, 包括姓名、街道、城市、州、邮编等信息。",
+    "keywords": "地址生成器, 美国地址, 地址生成, address generator",
+    "pages": {
+      "home": {
+        "title": "地址生成器 - 免费全球地址身份信息生成工具",
+        "description": "免费的全球地址生成器，支持生成美国、加拿大、英国、新加坡、台湾、香港等地区的真实地址信息和身份信息。",
+        "keywords": "地址生成器, 身份生成器, 全球地址, 免费地址生成, address generator"
+      },
+      "us": {
+        "title": "美国地址生成器 - 免费美国身份信息生成",
+        "description": "专业的美国地址生成器，生成真实有效的美国地址信息，包括姓名、街道、城市、州、邮编等完整信息。",
+        "keywords": "美国地址生成器, 美国地址, 美国身份生成, US address generator"
+      },
+      "ca": {
+        "title": "加拿大地址生成器 - 免费加拿大身份信息生成",
+        "description": "专业的加拿大地址生成器，生成真实有效的加拿大地址信息，包括姓名、街道、城市、省份、邮编等完整信息。",
+        "keywords": "加拿大地址生成器, 加拿大地址, 加拿大身份生成, Canada address generator"
+      },
+      "uk": {
+        "title": "英国地址生成器 - 免费英国身份信息生成",
+        "description": "专业的英国地址生成器，生成真实有效的英国地址信息，包括姓名、街道、城市、郡县、邮编等完整信息。",
+        "keywords": "英国地址生成器, 英国地址, 英国身份生成, UK address generator"
+      },
+      "sg": {
+        "title": "新加坡地址生成器 - 免费新加坡身份信息生成",
+        "description": "专业的新加坡地址生成器，生成真实有效的新加坡地址信息，包括姓名、街道、区域、邮编等完整信息。",
+        "keywords": "新加坡地址生成器, 新加坡地址, 新加坡身份生成, Singapore address generator"
+      },
+      "tw": {
+        "title": "台湾地址生成器 - 免费台湾身份信息生成",
+        "description": "专业的台湾地址生成器，生成真实有效的台湾地址信息，包括姓名、街道、城市、县市、邮编等完整信息。",
+        "keywords": "台湾地址生成器, 台湾地址, 台湾身份生成, Taiwan address generator"
+      },
+      "hk": {
+        "title": "香港地址生成器 - 免费香港身份信息生成",
+        "description": "专业的香港地址生成器，生成真实有效的香港地址信息，包括姓名、街道、区域等完整信息。",
+        "keywords": "香港地址生成器, 香港地址, 香港身份生成, Hong Kong address generator"
+      }
+    }
+  }
+}

@@ -84,10 +84,10 @@ AddressInfo {
   zipCode    String?  @map("zip_code") @db.VarChar(20)
   state      String?  @db.VarChar(50)
   stateFull  String?  @map("state_full") @db.VarChar(100)
+  sourceUrl  String?  @map("source_url") @db.Text
   country    String   @db.VarChar(100)
   latitude   String?  @db.VarChar(20)
   longitude  String?  @db.VarChar(20)
-  sourceUrl  String?  @map("source_url") @db.Text
   createdAt  DateTime @default(now()) @map("created_at")
   updatedAt  DateTime @default(now()) @updatedAt @map("updated_at")
 
@@ -96,11 +96,17 @@ AddressInfo {
 }
 ```
 
+#### 城市数据支持
+- **城市数据库**: 包含数千个城市名称，支持搜索自动补全
+- **数据来源**: 由 city.csv 自动生成的 cityData.ts 文件
+- **搜索功能**: 支持模糊匹配、精确匹配和限制搜索结果数量
+- **地理覆盖**: 包含美国、加拿大、英国、台湾、香港、新加坡等地区的城市
+
 ### API 设计
 
 #### 地址信息 API
 - **端点**: `POST /api/address/info`
-- **请求格式**: `{ country: string }`
+- **请求格式**: `{ country: string, place?: string }`
 - **响应格式**:
   ```typescript
   interface ApiResponse<T> {
@@ -122,12 +128,14 @@ AddressInfo {
     country: string;
   }
   ```
+- **数据验证**: 使用 Zod Schema 验证请求参数
+- **错误处理**: 统一的错误响应格式，包含详细错误日志
 
 #### 服务层架构
 - **AddressService**: 处理数据库操作，提供随机地址获取功能
-- **数据验证**: 使用 Zod 进行请求参数验证 (`AddressRequestSchema`)
-- **错误处理**: 统一的错误响应格式，包含详细的错误日志
+- **文本格式化**: 包含 `to_camel()` 方法用于字符串标题格式化
 - **数据库查询**: 使用原生 SQL 查询实现随机选择 (MySQL `RAND()` 函数)
+- **Prisma 配置**: 开发环境启用详细日志，生产环境只记录错误
 
 ### 组件设计
 
@@ -145,14 +153,24 @@ AddressInfo {
 - **导航栏**: 包含所有支持国家的导航链接
 - **侧边栏**: 显示热门州/城市地址列表
 - **功能按钮**: 生成、保存、搜索、复制地址
+- **搜索功能**: 集成城市搜索自动补全，支持 Portal 渲染
+- **地址保存**: 本地存储保存的地址，支持删除和管理
+- **复制功能**: 支持现代 Clipboard API 和降级方案
+
+#### AutocompletePortal 组件
+- **Portal 渲染**: 使用 React Portal 实现自动补全下拉框
+- **位置计算**: 动态计算下拉框位置，确保正确的显示效果
+- **客户端渲染**: 确保只在客户端环境下渲染，避免 SSR 问题
+- **事件处理**: 支持点击外部关闭和键盘导航
 
 ## 配置文件
 
 ### Next.js 配置 (next.config.ts)
-- **输出模式**: 静态导出 (`output: 'export'`)
+- **输出模式**: 移除了静态导出配置，支持 API 路由和直接部署
 - **图片优化**: 未优化模式 (`unoptimized: true`)
 - **构建工具**: 使用 Turbopack 加速
 - **生产环境**: 移除控制台日志
+- **路径配置**: 支持尾随斜杠和无尾随斜杠的URL
 
 ### TailwindCSS 配置 (tailwind.config.ts)
 - **主题色彩**: 青绿色系 (#14b8a6) 为主色调
@@ -216,17 +234,31 @@ AddressInfo {
 - **平台兼容**: 适合 Vercel、Netlify 等平台
 
 ### Docker 支持
-- **多阶段构建**: 使用 Node.js 18 Alpine 构建阶段 + Nginx Alpine 生产阶段
-- **静态文件服务**: Nginx 直接服务 Next.js 构建的静态文件
-- **生产优化**: Alpine 镜像确保最小化容器大小
+- **多阶段构建**: 使用 Node.js 18 Alpine 构建阶段 + Node.js 18 Alpine 生产阶段
+- **数据库集成**: 通过 docker-compose 集成 MySQL 数据库服务
+- **生产优化**: Alpine 镜像确保最小化容器大小，非root用户运行
 - **环境变量**: 支持容器化部署的环境配置
+- **部署脚本**: 包含 deploy.sh、quick-deploy.sh 和 deploy-domain.sh 脚本
 
 ### 支持的国家/地区
-- 美国 (us)
+- 美国 (us) - 包含州级别路由: `/us/[state]`
 - 台湾 (tw)
 - 加拿大 (ca)
 - 香港 (hk)
 - 新加坡 (sg)
 - 英国 (uk)
 
-每个国家都有独立的页面路由，共享相同的组件功能。
+每个国家都有独立的页面路由，共享相同的组件功能。美国页面还支持按州筛选的子路由。
+
+### 其他页面
+- **my_address**: `/my_address` - 用户保存的地址管理页面
+- **主页**: 默认重定向到美国页面
+
+### 部署和运维
+- **部署脚本**:
+  - `deploy.sh` - 标准部署脚本
+  - `quick-deploy.sh` - 快速部署脚本
+  - `deploy-domain.sh` - 域名部署脚本
+- **SSL 证书**: 包含 address-generator.xyz 的 SSL 证书文件
+- **Nginx 配置**: 生产环境的 Nginx 配置文件
+- **进程管理**: ecosystem.config.js 用于 PM2 进程管理

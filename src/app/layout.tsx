@@ -1,28 +1,11 @@
-import type { Metadata } from "next";
-import "./globals.css";
+import type { ReactNode } from 'react';
 
-export const metadata: Metadata = {
-  title: "地址生成器 - Address Generator",
-  description: "免费的美国地址生成器，支持生成真实的美国地址信息，包括姓名、街道、城市、州、邮编等信息。",
-  keywords: "地址生成器, 美国地址, 地址生成, address generator",
+type Props = {
+  children: ReactNode;
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
-  return (
-    <html lang="zh-CN">
-      <head>
-        <link
-          href="https://fonts.googleapis.com/icon?family=Material+Icons"
-          rel="stylesheet"
-        />
-      </head>
-      <body className="antialiased">
-        {children}
-      </body>
-    </html>
-  );
+// Since we have a `not-found.tsx` page on the root, a layout file
+// is required, even if it's just passing children through.
+export default function RootLayout({ children }: Props) {
+  return children;
 }

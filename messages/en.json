@@ -1,0 +1,182 @@
+{
+  "common": {
+    "title": "Address Generator - Free Virtual Address Generation Tool",
+    "description": "Free address generator supporting virtual addresses for US, Canada, UK, Singapore, Taiwan, Hong Kong and more regions. Perfect for registration and testing purposes.",
+    "keywords": "address generator, virtual address, fake address, random address, testing address, US address, Canada address, UK address, Singapore address, Taiwan address, Hong Kong address",
+    "generate": "Generate",
+    "save": "Save",
+    "copy": "Copy",
+    "delete": "Delete",
+    "clear": "Clear",
+    "search": "Search",
+    "back": "Back",
+    "home": "Home",
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "confirm": "Confirm",
+    "cancel": "Cancel"
+  },
+  "theme": {
+    "light": "Light Mode",
+    "dark": "Dark Mode",
+    "switch_to_light": "Switch to Light Mode",
+    "switch_to_dark": "Switch to Dark Mode",
+    "light_mode": "Light Mode",
+    "dark_mode": "Dark Mode"
+  },
+  "header": {
+    "title": "Address Generator",
+    "subtitle": "Free Address Generation Tool"
+  },
+  "search": {
+    "title": "Search Address",
+    "placeholder": "Search city or state name...",
+    "button": "Search",
+    "searching": "Searching...",
+    "search": "Search",
+    "clear": "Clear",
+    "clear_aria": "Clear search",
+    "clear_aria_label": "Clear search",
+    "enter_search_content": "Please enter search content",
+    "no_results": "No results found",
+    "search_failed": "Search failed",
+    "service_unavailable": "Search service unavailable",
+    "search_failed_retry": "Search failed, please try again",
+    "clear_search": "Clear search"
+  },
+  "address": {
+    "basic_info": "Basic Information",
+    "full_name": "Full Name",
+    "gender": "Gender",
+    "birthday": "Birthday",
+    "city": "City",
+    "state": "State/Province",
+    "address": "Address",
+    "zip_code": "ZIP Code",
+    "telephone": "Phone Number",
+    "full_address": "Full Address",
+    "country": "Country"
+  },
+  "actions": {
+    "generate": "Generate",
+    "save": "Save",
+    "generate_new": "Generate New Address",
+    "save_address": "Save Address",
+    "copy_address": "Copy Address",
+    "copy_full_address": "Copy Full Address",
+    "copied": "Copied!",
+    "copied_full_address": "Full address copied",
+    "my_saved_addresses": "My Saved Addresses",
+    "address_saved": "Address information saved!",
+    "save_failed": "Failed to save address, please try again",
+    "copy_success": "Address copied to clipboard",
+    "copy_failed": "Copy failed, please copy address manually",
+    "copy_failed_manual": "Copy failed, please copy address manually"
+  },
+  "saved_addresses": {
+    "title": "My Saved Addresses",
+    "my_saved_addresses": "My Saved Addresses",
+    "no_addresses": "No saved addresses",
+    "delete_success": "Address deleted successfully",
+    "delete_failed": "Failed to delete address, please try again",
+    "clear_all": "Clear All Addresses",
+    "clear_success": "All addresses cleared",
+    "clear_failed": "Failed to clear, please try again",
+    "load_failed": "Failed to load saved addresses",
+    "created_at": "Created At"
+  },
+  "navigation": {
+    "home": "Home",
+    "us_address": "US Address",
+    "ca_address": "Canada Address",
+    "uk_address": "UK Address",
+    "sg_address": "Singapore Address",
+    "tw_address": "Taiwan Address",
+    "hk_address": "Hong Kong Address",
+    "taiwan_address": "Taiwan Address",
+    "tax_free_states": "US Tax-Free States",
+    "popular_cities": "Popular US Cities",
+    "alaska_address": "Alaska Address",
+    "delaware_address": "Delaware Address",
+    "montana_address": "Montana Address",
+    "new_hampshire_address": "New Hampshire Address",
+    "oregon_address": "Oregon Address",
+    "new_york_address": "New York City Address",
+    "los_angeles_address": "Los Angeles Address",
+    "chicago_address": "Chicago Address",
+    "houston_address": "Houston Address",
+    "phoenix_address": "Phoenix Address",
+    "countries": {
+      "us": "United States",
+      "ca": "Canada",
+      "uk": "United Kingdom", 
+      "sg": "Singapore",
+      "tw": "Taiwan",
+      "hk": "Hong Kong"
+    },
+    "us_states": {
+      "title": "Popular US States",
+      "california": "California Address",
+      "texas": "Texas Address",
+      "florida": "Florida Address",
+      "new_york": "New York Address",
+      "new_hampshire": "New Hampshire Address",
+      "oregon": "Oregon Address"
+    },
+    "us_cities": {
+      "title": "Popular US Cities",
+      "new_york": "New York City Address",
+      "los_angeles": "Los Angeles Address",
+      "chicago": "Chicago Address",
+      "houston": "Houston Address",
+      "phoenix": "Phoenix Address"
+    }
+  },
+  "footer": {
+    "copyright": "Copyright © 2025 address-generator.xyz. All rights reserved.",
+    "disclaimer": "The generated address data comes from publicly available online resources, not for commercial use, for learning reference only."
+  },
+  "metadata": {
+    "title": "US Address Generator - US Identity Generator - Address Generator",
+    "description": "Free US address generator that supports generating real US address information and identity information, including name, street, city, state, ZIP code and other information.",
+    "keywords": "address generator, US address, address generation, address generator",
+    "pages": {
+      "home": {
+        "title": "Address Generator - Free Global Address & Identity Information Generator",
+        "description": "Free global address generator that supports generating real address information and identity information for US, Canada, UK, Singapore, Taiwan, Hong Kong and other regions.",
+        "keywords": "address generator, identity generator, global address, free address generator, random address"
+      },
+      "us": {
+        "title": "US Address Generator - Free US Identity Information Generator",
+        "description": "Professional US address generator that creates real and valid US address information, including name, street, city, state, ZIP code and complete information.",
+        "keywords": "US address generator, US address, US identity generator, American address generator"
+      },
+      "ca": {
+        "title": "Canada Address Generator - Free Canadian Identity Information Generator",
+        "description": "Professional Canada address generator that creates real and valid Canadian address information, including name, street, city, province, postal code and complete information.",
+        "keywords": "Canada address generator, Canadian address, Canada identity generator, Canadian address generator"
+      },
+      "uk": {
+        "title": "UK Address Generator - Free UK Identity Information Generator",
+        "description": "Professional UK address generator that creates real and valid UK address information, including name, street, city, county, postcode and complete information.",
+        "keywords": "UK address generator, UK address, UK identity generator, British address generator"
+      },
+      "sg": {
+        "title": "Singapore Address Generator - Free Singapore Identity Information Generator",
+        "description": "Professional Singapore address generator that creates real and valid Singapore address information, including name, street, district, postal code and complete information.",
+        "keywords": "Singapore address generator, Singapore address, Singapore identity generator, SG address generator"
+      },
+      "tw": {
+        "title": "Taiwan Address Generator - Free Taiwan Identity Information Generator",
+        "description": "Professional Taiwan address generator that creates real and valid Taiwan address information, including name, street, city, county, postal code and complete information.",
+        "keywords": "Taiwan address generator, Taiwan address, Taiwan identity generator, TW address generator"
+      },
+      "hk": {
+        "title": "Hong Kong Address Generator - Free Hong Kong Identity Information Generator",
+        "description": "Professional Hong Kong address generator that creates real and valid Hong Kong address information, including name, street, district and complete information.",
+        "keywords": "Hong Kong address generator, Hong Kong address, Hong Kong identity generator, HK address generator"
+      }
+    }
+  }
+}

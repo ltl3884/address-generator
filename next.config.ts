@@ -1,7 +1,11 @@
 import type { NextConfig } from "next";
+import createNextIntlPlugin from 'next-intl/plugin';
+
+const withNextIntl = createNextIntlPlugin('./src/i18n/request.ts');
 
 const nextConfig: NextConfig = {
-  // 移除 output 配置，使用默认模式支持 API 路由和直接部署
+  // 启用独立输出模式以支持 Docker 部署
+  output: 'standalone',
   images: {
     unoptimized: true
   },
@@ -16,6 +20,16 @@ const nextConfig: NextConfig = {
   compiler: {
     removeConsole: process.env.NODE_ENV === 'production',
   },
+
+  // 确保多语言路由在生产环境中正常工作
+  async rewrites() {
+    return [
+      {
+        source: '/',
+        destination: '/zh',
+      },
+    ];
+  },
 };
 
-export default nextConfig;
+export default withNextIntl(nextConfig);

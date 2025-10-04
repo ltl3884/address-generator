@@ -1,6 +1,20 @@
 # 地址生成器部署指南
 
-这是一个基于Next.js的地址生成器应用，已配置为静态导出，可以部署在nginx服务器上。
+这是一个基于 Next.js 的多语言地址生成器应用，支持中文和英文界面，配置为独立模式部署。
+
+## 部署前检查清单
+
+### 1. 环境配置
+- [ ] 复制 `.env.production` 并配置生产环境变量
+- [ ] 设置正确的数据库连接字符串
+- [ ] 配置域名和 SSL 证书（如需要）
+- [ ] 设置安全密钥和认证配置
+
+### 2. 多语言支持验证
+- [ ] 确认 `messages/zh.json` 和 `messages/en.json` 包含所有必要的翻译
+- [ ] 验证 SEO 元数据（title、description、keywords）已翻译
+- [ ] 测试语言切换功能
+- [ ] 确认默认语言设置为中文（zh）
 
 ## 本地开发
 
@@ -8,46 +22,63 @@
 # 安装依赖
 npm install
 
+# 设置数据库
+npm run db:setup
+
 # 启动开发服务器
 npm run dev
+
+# 访问应用
+# 中文版本：http://localhost:3000/zh
+# 英文版本：http://localhost:3000/en
+# 根路径自动重定向到中文版本
+```
+
+## 生产部署
+
+### 方法1: Docker Compose 部署（推荐）
+
+```bash
+# 构建和启动所有服务（包括 Nginx、应用和 MySQL）
+docker-compose up -d
+
+# 查看服务状态
+docker-compose ps
+
+# 查看应用日志
+docker-compose logs -f app
+
+# 停止服务
+docker-compose down
+```
+
+### 方法2: 单独 Docker 部署
+
+```bash
+# 构建 Docker 镜像
+docker build -t address-generator .
+
+# 运行容器（需要外部数据库）
+docker run -p 3000:3000 \
+  -e DATABASE_URL="mysql://user:password@host:3306/database" \
+  -e NODE_ENV=production \
+  address-generator
 
 # 访问 http://localhost:3000
 ```
 
-## 构建和部署
-
-### 方法1: 直接构建静态文件
+### 方法3: 手动部署
 
 ```bash
-# 构建静态文件
+# 1. 构建应用
 npm run build
 
-# 构建完成后，静态文件将在 'out' 目录中
-# 将 'out' 目录的内容复制到nginx的web根目录
+# 2. 启动生产服务器
+npm start
+
+# 或使用 PM2 进程管理
+pm2 start npm --name "address-generator" -- start
 ```
-
-### 方法2: 使用Docker部署
-
-```bash
-# 构建Docker镜像
-docker build -t address-generator .
-
-# 运行容器
-docker run -p 80:80 address-generator
-
-# 访问 http://localhost
-```
-
-### 方法3: 手动nginx配置
-
-1. 构建静态文件：
-```bash
-npm run build
-```
-
-2. 将 `out` 目录的内容复制到nginx的web根目录（通常是 `/var/www/html` 或 `/usr/share/nginx/html`）
-
-3. 使用提供的 `nginx.conf` 配置文件，或将其内容添加到你的nginx配置中
 
 4. 重启nginx服务：
 ```bash

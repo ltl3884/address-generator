@@ -2,8 +2,10 @@
 
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 import { filterCities } from '@/lib/cityData';
 import AutocompletePortal from './AutocompletePortal';
+import LanguageSwitcher from './LanguageSwitcher';
 
 interface AddressData {
   fullName: string;
@@ -40,6 +42,16 @@ interface ApiResponse {
 }
 
 export default function AddressGenerator() {
+  // Translation hooks
+  const tTheme = useTranslations('theme');
+  const tHeader = useTranslations('header');
+  const tSearch = useTranslations('search');
+  const tAddress = useTranslations('address');
+  const tActions = useTranslations('actions');
+  const tSavedAddresses = useTranslations('saved_addresses');
+  const tNavigation = useTranslations('navigation');
+  const tFooter = useTranslations('footer');
+
   const [isDark, setIsDark] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [copySuccess, setCopySuccess] = useState(false);
@@ -288,10 +300,10 @@ export default function AddressGenerator() {
       localStorage.setItem('savedAddresses', JSON.stringify(existingAddresses));
 
       // 显示成功提示
-      showSaveMessage('地址信息已保存！', 'info');
-    } catch (error) {
+    showSaveMessage(tActions('address_saved'), 'info');
+  } catch (error) {
       console.error('保存地址失败:', error);
-      showSaveMessage('保存地址失败，请重试', 'error');
+      showSaveMessage(tActions('save_failed'), 'error');
     }
   };
 
@@ -386,7 +398,7 @@ export default function AddressGenerator() {
   const handleSearch = async () => {
     // 输入验证
     if (!searchQuery.trim()) {
-      showSearchMessage('请输入搜索内容', 'error');
+      showSearchMessage(tSearch('enter_search_content'), 'error');
       return;
     }
 
@@ -416,19 +428,19 @@ export default function AddressGenerator() {
           console.log('Search results loaded successfully:', apiResponse.data);
         } else if (apiResponse.code === 404) {
           // 无搜索结果
-          showSearchMessage('结果为空', 'error');
+          showSearchMessage(tSearch('no_results'), 'error');
         } else {
           // setSearchError(apiResponse.message || '搜索失败');
-          showSearchMessage(apiResponse.message || '搜索失败', 'error');
+          showSearchMessage(apiResponse.message || tSearch('search_failed'), 'error');
         }
       } else {
         // setSearchError('搜索服务不可用');
-        showSearchMessage('搜索服务不可用', 'error');
+        showSearchMessage(tSearch('service_unavailable'), 'error');
       }
     } catch (error) {
       console.error('Error searching address data:', error);
       // setSearchError('搜索失败，请重试');
-      showSearchMessage('搜索失败，请重试', 'error');
+      showSearchMessage(tSearch('search_failed_retry'), 'error');
     } finally {
       setIsSearching(false);
     }
@@ -470,7 +482,7 @@ export default function AddressGenerator() {
         }, 2000);
       } catch (fallbackError) {
         console.error('降级复制方法也失败:', fallbackError);
-        alert('复制失败，请手动复制地址');
+        alert(tActions('copy_failed_manual'));
       }
       document.body.removeChild(textArea);
     }
@@ -481,8 +493,9 @@ export default function AddressGenerator() {
       <div className="container mx-auto p-4 max-w-7xl relative z-20">
         {/* Header */}
         <header className="flex justify-between items-center py-6 mb-4">
-          <h1 className="text-3xl font-bold text-primary">地址生成器</h1>
+          <h1 className="text-3xl font-bold text-primary">{tHeader('title')}</h1>
           <div className="flex items-center space-x-4">
+            <LanguageSwitcher />
             <button
               className={`
                 relative px-4 py-2 rounded-lg font-medium text-sm transition-all duration-300 ease-in-out
@@ -493,12 +506,12 @@ export default function AddressGenerator() {
                 flex items-center space-x-2 min-w-[120px] justify-center
               `}
               onClick={handleThemeToggle}
-              aria-label={isDark ? "切换到浅色模式" : "切换到深色模式"}
+              aria-label={isDark ? tTheme('switch_to_light') : tTheme('switch_to_dark')}
             >
               <span className="material-icons text-lg">
                 {isDark ? 'light_mode' : 'dark_mode'}
               </span>
-              <span>{isDark ? '浅色模式' : '深色模式'}</span>
+              <span>{isDark ? tTheme('light_mode') : tTheme('dark_mode')}</span>
             </button>
           </div>
         </header>
@@ -506,13 +519,13 @@ export default function AddressGenerator() {
         {/* Navigation */}
         <nav className="bg-surface-light dark:glass-morphism p-4 rounded-lg shadow-card dark:shadow-glass mb-6 border border-border-light dark:border-border-glass backdrop-blur-glass">
           <ul className="flex flex-wrap gap-x-8 gap-y-2 text-sm">
-            <li><Link className="text-primary hover:text-primary-600 transition-colors font-medium" href="/">首页</Link></li>
-            <li><Link className="text-primary hover:text-primary-600 transition-colors font-medium" href="/us">美国地址</Link></li>
-            <li><Link className="text-primary hover:text-primary-600 transition-colors font-medium" href="/tw">台湾地址</Link></li>
-            <li><Link className="text-primary hover:text-primary-600 transition-colors font-medium" href="/ca">加拿大地址</Link></li>
-            <li><Link className="text-primary hover:text-primary-600 transition-colors font-medium" href="/hk">香港地址</Link></li>
-            <li><Link className="text-primary hover:text-primary-600 transition-colors font-medium" href="/sg">新加坡地址</Link></li>
-            <li><Link className="text-primary hover:text-primary-600 transition-colors font-medium" href="/uk">英国地址</Link></li>
+            <li><Link className="text-primary hover:text-primary-600 transition-colors font-medium" href="/">{tNavigation('home')}</Link></li>
+            <li><Link className="text-primary hover:text-primary-600 transition-colors font-medium" href="/us">{tNavigation('us_address')}</Link></li>
+            <li><Link className="text-primary hover:text-primary-600 transition-colors font-medium" href="/tw">{tNavigation('tw_address')}</Link></li>
+            <li><Link className="text-primary hover:text-primary-600 transition-colors font-medium" href="/ca">{tNavigation('ca_address')}</Link></li>
+            <li><Link className="text-primary hover:text-primary-600 transition-colors font-medium" href="/hk">{tNavigation('hk_address')}</Link></li>
+            <li><Link className="text-primary hover:text-primary-600 transition-colors font-medium" href="/sg">{tNavigation('sg_address')}</Link></li>
+            <li><Link className="text-primary hover:text-primary-600 transition-colors font-medium" href="/uk">{tNavigation('uk_address')}</Link></li>
           </ul>
         </nav>
 
@@ -521,13 +534,13 @@ export default function AddressGenerator() {
           <div className="lg:col-span-3 bg-surface-light dark:glass-morphism p-6 rounded-lg shadow-card dark:shadow-glass border border-border-light dark:border-border-glass backdrop-blur-glass">
             {/* Search Section */}
             <div className="border-b border-border-light dark:border-border-dark pb-6 mb-6">
-              <h2 className="text-lg font-semibold text-primary mb-4">搜索</h2>
+              <h2 className="text-lg font-semibold text-primary mb-4">{tSearch('title')}</h2>
               <div className="space-y-3">
                 <div className="flex items-center space-x-3">
                   <input
                     ref={inputRef}
                     className="flex-grow p-3 border border-border-light dark:border-border-dark rounded-md bg-background-light dark:bg-background-dark focus:ring-2 focus:ring-primary focus:border-primary transition-colors text-sm"
-                    placeholder="输入城市名或州名搜索"
+                    placeholder={tSearch('placeholder')}
                     type="text"
                     value={searchQuery}
                     onChange={(e) => handleSearchInputChange(e.target.value)}
@@ -540,15 +553,15 @@ export default function AddressGenerator() {
                     onClick={handleSearch}
                     disabled={isSearching}
                   >
-                    {isSearching ? '搜索中...' : '搜索'}
+                    {isSearching ? tSearch('searching') : tSearch('search')}
                   </button>
                   <button
                     className="bg-gray-500 dark:bg-gray-600 text-white px-6 py-3 rounded-md font-medium transition-colors text-sm hover:bg-gray-600 dark:hover:bg-gray-700"
                     onClick={handleClear}
                     disabled={isSearching}
-                    aria-label="清空搜索内容"
+                    aria-label={tSearch('clear_aria_label')}
                   >
-                    清空
+                    {tSearch('clear')}
                   </button>
                 </div>
 
@@ -627,25 +640,25 @@ export default function AddressGenerator() {
 
             {/* Basic Info Section */}
             <div className="flex items-center justify-between mb-6">
-              <h3 className="text-lg font-semibold text-text-light dark:text-text-dark">基本资料</h3>
+              <h3 className="text-lg font-semibold text-text-light dark:text-text-dark">{tAddress('basic_info')}</h3>
               <div className="flex space-x-2">
                 <button
                   className="bg-primary text-white px-4 py-2 rounded-md font-medium text-sm hover:bg-primary-600 transition-colors"
                   onClick={handleGenerate}
                 >
-                  生成
+                  {tActions('generate')}
                 </button>
                 <button
                   className="bg-primary text-white px-4 py-2 rounded-md font-medium text-sm hover:bg-primary-600 transition-colors"
                   onClick={handleSave}
                 >
-                  保存
+                  {tActions('save')}
                 </button>
                 <Link
                   href="/my_address"
                   className="bg-primary text-white px-4 py-2 rounded-md font-medium text-sm hover:bg-primary-600 transition-colors"
                 >
-                  我的保存地址
+                  {tSavedAddresses('my_saved_addresses')}
                 </Link>
               </div>
             </div>
@@ -653,39 +666,39 @@ export default function AddressGenerator() {
             {/* Address Data Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-1 text-sm">
               <div className="flex border-b border-dashed border-border-light dark:border-border-dark py-3">
-                <span className="w-20 text-subtle-light dark:text-subtle-dark">姓名</span>
+                <span className="w-20 text-subtle-light dark:text-subtle-dark">{tAddress('full_name')}</span>
                 <span className="flex-1 text-text-light dark:text-text-dark">{addressData.fullName}</span>
               </div>
               <div className="flex border-b border-dashed border-border-light dark:border-border-dark py-3">
-                <span className="w-20 text-subtle-light dark:text-subtle-dark">性别</span>
+                <span className="w-20 text-subtle-light dark:text-subtle-dark">{tAddress('gender')}</span>
                 <span className="flex-1 text-text-light dark:text-text-dark">{addressData.gender}</span>
               </div>
               <div className="flex border-b border-dashed border-border-light dark:border-border-dark py-3">
-                <span className="w-20 text-subtle-light dark:text-subtle-dark">生日</span>
+                <span className="w-20 text-subtle-light dark:text-subtle-dark">{tAddress('birthday')}</span>
                 <span className="flex-1 text-text-light dark:text-text-dark">{addressData.birthday}</span>
               </div>
               <div className="flex border-b border-dashed border-border-light dark:border-border-dark py-3">
-                <span className="w-20 text-subtle-light dark:text-subtle-dark">城市</span>
+                <span className="w-20 text-subtle-light dark:text-subtle-dark">{tAddress('city')}</span>
                 <span className="flex-1 text-text-light dark:text-text-dark">{addressData.city}</span>
               </div>
               <div className="flex border-b border-dashed border-border-light dark:border-border-dark py-3">
-                <span className="w-20 text-subtle-light dark:text-subtle-dark">州/省</span>
+                <span className="w-20 text-subtle-light dark:text-subtle-dark">{tAddress('state')}</span>
                 <span className="flex-1 text-text-light dark:text-text-dark">{!isClient ? addressData.state : currentCountry === 'us' ? `${addressData.stateFull}(${addressData.state})` : addressData.state}</span>
               </div>
               <div className="flex border-b border-dashed border-border-light dark:border-border-dark py-3">
-                <span className="w-20 text-subtle-light dark:text-subtle-dark">地址</span>
+                <span className="w-20 text-subtle-light dark:text-subtle-dark">{tAddress('address')}</span>
                 <span className="flex-1 text-text-light dark:text-text-dark">{addressData.address}</span>
               </div>
               <div className="flex border-b border-dashed border-border-light dark:border-border-dark py-3">
-                <span className="w-20 text-subtle-light dark:text-subtle-dark">邮编</span>
+                <span className="w-20 text-subtle-light dark:text-subtle-dark">{tAddress('zip_code')}</span>
                 <span className="flex-1 text-text-light dark:text-text-dark">{addressData.zipCode}</span>
               </div>
               <div className="flex border-b border-dashed border-border-light dark:border-border-dark py-3">
-                <span className="w-20 text-subtle-light dark:text-subtle-dark">电话号码</span>
+                <span className="w-20 text-subtle-light dark:text-subtle-dark">{tAddress('telephone')}</span>
                 <span className="flex-1 text-text-light dark:text-text-dark">{addressData.telephone}</span>
               </div>
               <div className="flex border-b border-dashed border-border-light dark:border-border-dark py-3 md:col-span-2">
-                <span className="w-20 text-subtle-light dark:text-subtle-dark">完整地址</span>
+                <span className="w-20 text-subtle-light dark:text-subtle-dark">{tAddress('full_address')}</span>
                 <div className="flex-1 flex items-center">
                   <span className="text-text-light dark:text-text-dark">
                     {!isClient 
@@ -707,8 +720,8 @@ export default function AddressGenerator() {
                       }
                       flex items-center justify-center w-6 h-6 flex-shrink-0
                     `}
-                    title={copySuccess ? "已复制!" : "复制完整地址"}
-                    aria-label={copySuccess ? "已复制完整地址" : "复制完整地址"}
+                    title={copySuccess ? tActions('copied') : tActions('copy_full_address')}
+                    aria-label={copySuccess ? tActions('copied_full_address') : tActions('copy_full_address')}
                   >
                     <span className="material-icons text-sm">
                       {copySuccess ? 'check' : 'content_copy'}
@@ -722,14 +735,14 @@ export default function AddressGenerator() {
           {/* Sidebar */}
           <aside className="space-y-6">
             <div className="bg-surface-light dark:glass-morphism p-4 rounded-lg shadow-card dark:shadow-glass border border-border-light dark:border-border-glass backdrop-blur-glass">
-              <h3 className="text-lg font-semibold text-primary border-b border-border-light dark:border-border-dark pb-3 mb-4">美国免消费税州</h3>
+              <h3 className="text-lg font-semibold text-primary border-b border-border-light dark:border-border-dark pb-3 mb-4">{tNavigation('tax_free_states')}</h3>
               <ul className="space-y-1 text-sm">
                 <li>
                   <Link 
                     className="block p-2 rounded-md text-subtle-light dark:text-subtle-dark hover:bg-primary hover:text-white transition-colors cursor-pointer" 
                     href="/us/Alaska"
                   >
-                    阿拉斯加州地址
+                    {tNavigation('alaska_address')}
                   </Link>
                 </li>
                 <li>
@@ -737,7 +750,7 @@ export default function AddressGenerator() {
                     className="block p-2 rounded-md text-subtle-light dark:text-subtle-dark hover:bg-primary hover:text-white transition-colors cursor-pointer" 
                     href="/us/Delaware"
                   >
-                    特拉华州地址
+                    {tNavigation('delaware_address')}
                   </Link>
                 </li>
                 <li>
@@ -745,7 +758,7 @@ export default function AddressGenerator() {
                     className="block p-2 rounded-md text-subtle-light dark:text-subtle-dark hover:bg-primary hover:text-white transition-colors cursor-pointer" 
                     href="/us/Montana"
                   >
-                    蒙大拿州地址
+                    {tNavigation('montana_address')}
                   </Link>
                 </li>
                 <li>
@@ -753,7 +766,7 @@ export default function AddressGenerator() {
                     className="block p-2 rounded-md text-subtle-light dark:text-subtle-dark hover:bg-primary hover:text-white transition-colors cursor-pointer" 
                     href="/us/New Hampshire"
                   >
-                    新罕布什尔州地址
+                    {tNavigation('new_hampshire_address')}
                   </Link>
                 </li>
                 <li>
@@ -761,21 +774,21 @@ export default function AddressGenerator() {
                     className="block p-2 rounded-md text-subtle-light dark:text-subtle-dark hover:bg-primary hover:text-white transition-colors cursor-pointer" 
                     href="/us/Oregon"
                   >
-                    俄勒冈州地址
+                    {tNavigation('oregon_address')}
                   </Link>
                 </li>
               </ul>
             </div>
 
             <div className="bg-surface-light dark:glass-morphism p-4 rounded-lg shadow-card dark:shadow-glass border border-border-light dark:border-border-glass backdrop-blur-glass">
-              <h3 className="text-lg font-semibold text-primary border-b border-border-light dark:border-border-dark pb-3 mb-4">美国热门城市</h3>
+              <h3 className="text-lg font-semibold text-primary border-b border-border-light dark:border-border-dark pb-3 mb-4">{tNavigation('popular_cities')}</h3>
               <ul className="space-y-1 text-sm">
                 <li>
                   <Link 
                     className="block p-2 rounded-md text-subtle-light dark:text-subtle-dark hover:bg-primary hover:text-white transition-colors cursor-pointer" 
                     href="/us/New York"
                   >
-                    纽约市地址
+                    {tNavigation('new_york_address')}
                   </Link>
                 </li>
                 <li>
@@ -783,7 +796,7 @@ export default function AddressGenerator() {
                     className="block p-2 rounded-md text-subtle-light dark:text-subtle-dark hover:bg-primary hover:text-white transition-colors cursor-pointer" 
                     href="/us/Los Angeles"
                   >
-                    洛杉矶地址
+                    {tNavigation('los_angeles_address')}
                   </Link>
                 </li>
                 <li>
@@ -791,7 +804,7 @@ export default function AddressGenerator() {
                     className="block p-2 rounded-md text-subtle-light dark:text-subtle-dark hover:bg-primary hover:text-white transition-colors cursor-pointer" 
                     href="/us/Chicago"
                   >
-                    芝加哥地址
+                    {tNavigation('chicago_address')}
                   </Link>
                 </li>
                 <li>
@@ -799,7 +812,7 @@ export default function AddressGenerator() {
                     className="block p-2 rounded-md text-subtle-light dark:text-subtle-dark hover:bg-primary hover:text-white transition-colors cursor-pointer" 
                     href="/us/Houston"
                   >
-                    休斯顿地址
+                    {tNavigation('houston_address')}
                   </Link>
                 </li>
                 <li>
@@ -807,7 +820,7 @@ export default function AddressGenerator() {
                     className="block p-2 rounded-md text-subtle-light dark:text-subtle-dark hover:bg-primary hover:text-white transition-colors cursor-pointer" 
                     href="/us/Phoenix"
                   >
-                    凤凰城地址
+                    {tNavigation('phoenix_address')}
                   </Link>
                 </li>
               </ul>
@@ -818,8 +831,8 @@ export default function AddressGenerator() {
         {/* Footer */}
         <footer className="mt-8 bg-surface-light dark:glass-morphism p-6 rounded-lg shadow-card dark:shadow-glass border border-border-light dark:border-border-glass backdrop-blur-glass text-sm">
           <div className="pt-4 text-center text-xs text-subtle-light dark:text-subtle-dark">
-            <p>Copyright © 2025 address-generator.xyz. All rights reserved.</p>
-            <p className="mt-1">地址生成的数据来自于网上的公开资料, 不用于任何商业用途, 仅供学习参考.</p>
+            <p>{tFooter('copyright')}</p>
+            <p className="mt-1">{tFooter('disclaimer')}</p>
           </div>
         </footer>
       </div>
