@@ -133,6 +133,19 @@
       "phoenix": "Phoenix Address"
     }
   },
+  "faq": {
+    "title": "Frequently Asked Questions",
+    "questions": {
+      "q1": {
+        "question": "Are the generated addresses real?",
+        "answer": "The generated address information is based on real geographic locations and postal code data, but personal information (such as names and phone numbers) is randomly generated virtual information for testing and learning purposes only."
+      },
+      "q2": {
+        "question": "Can I use these addresses for actual deliveries?",
+        "answer": "No. These are virtual addresses for software testing, form filling practice, and other similar purposes only. Please do not use them for any actual mailing, delivery, or commercial activities."
+      }
+    }
+  },
   "footer": {
     "copyright": "Copyright © 2025 address-generator.xyz. All rights reserved.",
     "disclaimer": "The generated address data comes from publicly available online resources, not for commercial use, for learning reference only."

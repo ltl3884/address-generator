@@ -50,6 +50,7 @@ export default function AddressGenerator() {
   const tActions = useTranslations('actions');
   const tSavedAddresses = useTranslations('saved_addresses');
   const tNavigation = useTranslations('navigation');
+  const tFaq = useTranslations('faq');
   const tFooter = useTranslations('footer');
 
   const [isDark, setIsDark] = useState(false);
@@ -62,6 +63,7 @@ export default function AddressGenerator() {
   const [currentCountry, setCurrentCountry] = useState('us'); // 添加当前国家状态
   const [currentPlace, setCurrentPlace] = useState(''); // 添加当前地点状态
   const [isClient, setIsClient] = useState(false); // 添加客户端状态标识
+  const [savedAddressCount, setSavedAddressCount] = useState(0); // 添加已保存地址个数状态
 
   // 自动补全相关状态
   const [suggestions, setSuggestions] = useState<string[]>([]);
@@ -141,6 +143,23 @@ export default function AddressGenerator() {
       setSearchQuery(place);
     }
   }, []);
+
+  // 读取已保存地址个数
+  useEffect(() => {
+    if (!isClient) return;
+    
+    const loadSavedAddressCount = () => {
+      try {
+        const savedAddresses = JSON.parse(localStorage.getItem('savedAddresses') || '[]');
+        setSavedAddressCount(savedAddresses.length);
+      } catch (error) {
+        console.error('读取保存地址个数失败:', error);
+        setSavedAddressCount(0);
+      }
+    };
+
+    loadSavedAddressCount();
+  }, [isClient]);
 
   // 使用localStorage缓存已请求的数据
   const getCachedData = (country: string, place?: string): AddressData | null => {
@@ -321,6 +340,9 @@ export default function AddressGenerator() {
       const existingAddresses = JSON.parse(localStorage.getItem('savedAddresses') || '[]');
       existingAddresses.push(savedAddress);
       localStorage.setItem('savedAddresses', JSON.stringify(existingAddresses));
+
+      // 更新地址个数
+      setSavedAddressCount(existingAddresses.length);
 
       // 显示成功提示
     showSaveMessage(tActions('address_saved'), 'info');
@@ -677,12 +699,14 @@ export default function AddressGenerator() {
                 >
                   {tActions('save')}
                 </button>
-                <Link
+                <a
                   href="/my_address"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="bg-primary text-white px-4 py-2 rounded-md font-medium text-sm hover:bg-primary-600 transition-colors"
                 >
-                  {tSavedAddresses('my_saved_addresses')}
-                </Link>
+                  {tSavedAddresses('my_saved_addresses')}({savedAddressCount})
+                </a>
               </div>
             </div>
 
@@ -850,6 +874,31 @@ export default function AddressGenerator() {
             </div>
           </aside>
         </main>
+
+        {/* FAQ Section */}
+        <section className="mt-8 bg-surface-light dark:glass-morphism p-6 rounded-lg shadow-card dark:shadow-glass border border-border-light dark:border-border-glass backdrop-blur-glass">
+          <h2 className="text-2xl font-bold text-primary mb-6 text-center">{tFaq('title')}</h2>
+          <div className="space-y-6 max-w-4xl mx-auto">
+            <div className="bg-white dark:bg-gray-800/50 p-5 rounded-lg border border-border-light dark:border-border-dark">
+              <h3 className="text-lg font-semibold text-text-light dark:text-text-dark mb-3 flex items-center">
+                <span className="material-icons text-primary mr-2">help_outline</span>
+                {tFaq('questions.q1.question')}
+              </h3>
+              <p className="text-subtle-light dark:text-subtle-dark leading-relaxed">
+                {tFaq('questions.q1.answer')}
+              </p>
+            </div>
+            <div className="bg-white dark:bg-gray-800/50 p-5 rounded-lg border border-border-light dark:border-border-dark">
+              <h3 className="text-lg font-semibold text-text-light dark:text-text-dark mb-3 flex items-center">
+                <span className="material-icons text-primary mr-2">help_outline</span>
+                {tFaq('questions.q2.question')}
+              </h3>
+              <p className="text-subtle-light dark:text-subtle-dark leading-relaxed">
+                {tFaq('questions.q2.answer')}
+              </p>
+            </div>
+          </div>
+        </section>
 
         {/* Footer */}
         <footer className="mt-8 bg-surface-light dark:glass-morphism p-6 rounded-lg shadow-card dark:shadow-glass border border-border-light dark:border-border-glass backdrop-blur-glass text-sm">
