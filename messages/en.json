@@ -141,8 +141,16 @@
         "answer": "The generated address information is based on real geographic locations and postal code data, but personal information (such as names and phone numbers) is randomly generated virtual information for testing and learning purposes only."
       },
       "q2": {
-        "question": "Can I use these addresses for actual deliveries?",
-        "answer": "No. These are virtual addresses for software testing, form filling practice, and other similar purposes only. Please do not use them for any actual mailing, delivery, or commercial activities."
+        "question": "How to generate addresses for a specific state?",
+        "answer": "Enter the state name in the search box to generate a random address for that state. For example, enter \"Delaware\" and click search to generate a random address in Delaware."
+      },
+      "q3": {
+        "question": "How to generate addresses for a specific city?",
+        "answer": "Enter the city name in the search box to generate a random address for that city. For example, enter \"Los Angeles\" and click search to generate a random address in Los Angeles."
+      },
+      "q4": {
+        "question": "How to save generated addresses?",
+        "answer": "Click the \"Save\" button to save the generated address locally. Saved addresses can be viewed and managed on the \"My Saved Addresses\" page."
       }
     }
   },

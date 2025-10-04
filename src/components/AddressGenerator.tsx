@@ -538,7 +538,17 @@ export default function AddressGenerator() {
       <div className="container mx-auto p-4 max-w-7xl relative z-20">
         {/* Header */}
         <header className="flex justify-between items-center py-6 mb-4">
-          <h1 className="text-3xl font-bold text-primary">{tHeader('title')}</h1>
+          <div className="flex items-center space-x-3">
+            <svg 
+              className="w-8 h-8 text-primary" 
+              fill="currentColor" 
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+            >
+              <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+            </svg>
+            <h1 className="text-3xl font-bold text-primary">{tHeader('title')}</h1>
+          </div>
           <div className="flex items-center space-x-4">
             <LanguageSwitcher />
             <button
@@ -895,6 +905,24 @@ export default function AddressGenerator() {
               </h3>
               <p className="text-subtle-light dark:text-subtle-dark leading-relaxed">
                 {tFaq('questions.q2.answer')}
+              </p>
+            </div>
+            <div className="bg-white dark:bg-gray-800/50 p-5 rounded-lg border border-border-light dark:border-border-dark">
+              <h3 className="text-lg font-semibold text-text-light dark:text-text-dark mb-3 flex items-center">
+                <span className="material-icons text-primary mr-2">help_outline</span>
+                {tFaq('questions.q3.question')}
+              </h3>
+              <p className="text-subtle-light dark:text-subtle-dark leading-relaxed">
+                {tFaq('questions.q3.answer')}
+              </p>
+            </div>
+            <div className="bg-white dark:bg-gray-800/50 p-5 rounded-lg border border-border-light dark:border-border-dark">
+              <h3 className="text-lg font-semibold text-text-light dark:text-text-dark mb-3 flex items-center">
+                <span className="material-icons text-primary mr-2">help_outline</span>
+                {tFaq('questions.q4.question')}
+              </h3>
+              <p className="text-subtle-light dark:text-subtle-dark leading-relaxed">
+                {tFaq('questions.q4.answer')}
               </p>
             </div>
           </div>

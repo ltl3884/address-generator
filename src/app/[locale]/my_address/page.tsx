@@ -140,7 +140,17 @@ export default function SavedAddresses() {
       <div className="container mx-auto p-4 max-w-7xl relative z-20">
         {/* Header */}
         <header className="flex justify-between items-center py-6 mb-4">
-          <h1 className="text-3xl font-bold text-primary">我的保存地址</h1>
+          <div className="flex items-center space-x-3">
+            <svg 
+              className="w-8 h-8 text-primary" 
+              fill="currentColor" 
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+            >
+              <path d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V7h10v2z"/>
+            </svg>
+            <h1 className="text-3xl font-bold text-primary">我的保存地址</h1>
+          </div>
           <div className="flex items-center space-x-4">
             <button
               className={`
