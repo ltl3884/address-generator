@@ -93,17 +93,40 @@ export default function AddressGenerator() {
       // 根路径，默认返回us
       return { country: 'us', place: '' };
     } else if (pathParts.length === 1) {
-      // 只有国家代码，如 /us
-      return { country: pathParts[0], place: '' };
+      // 只有一个部分，检查是否是语言代码
+      const supportedLocales = ['zh', 'en'];
+      if (supportedLocales.includes(pathParts[0])) {
+        // 如果是语言代码，默认返回us作为国家
+        return { country: 'us', place: '' };
+      } else {
+        // 否则当作国家处理
+        return { country: pathParts[0], place: '' };
+      }
     } else if (pathParts.length === 2) {
-      // 有国家代码和地点，如 /us/AL
-      // 对地点参数进行URL解码，处理空格等特殊字符
-      return { country: pathParts[0], place: decodeURIComponent(pathParts[1]) };
-    } else {
-      // 其他情况，取前两个部分
-      // 对地点参数进行URL解码，处理空格等特殊字符
-      return { country: pathParts[0], place: decodeURIComponent(pathParts[1]) };
+      // 两个部分：可能是 /locale/country 或 /country/place
+      // 检查第一个部分是否是语言代码（zh, en等）
+      const supportedLocales = ['zh', 'en'];
+      if (supportedLocales.includes(pathParts[0])) {
+        // 第一个是语言，第二个是国家
+        return { country: pathParts[1], place: '' };
+      } else {
+        // 第一个是国家，第二个是地点
+        return { country: pathParts[0], place: decodeURIComponent(pathParts[1]) };
+      }
+    } else if (pathParts.length >= 3) {
+      // 三个或更多部分：/locale/country/place
+      const supportedLocales = ['zh', 'en'];
+      if (supportedLocales.includes(pathParts[0])) {
+        // 第一个是语言，第二个是国家，第三个是地点
+        return { country: pathParts[1], place: decodeURIComponent(pathParts[2]) };
+      } else {
+        // 没有语言前缀，第一个是国家，第二个是地点
+        return { country: pathParts[0], place: decodeURIComponent(pathParts[1]) };
+      }
     }
+    
+    // 默认情况
+    return { country: 'us', place: '' };
   };
 
   // 客户端初始化
