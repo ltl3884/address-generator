@@ -10,7 +10,7 @@ export async function generateMetadata({ params }: Props) {
 }
 
 export default async function FAQPage({ params }: Props) {
-  const { locale } = await params;
+  await params;
   
   const faqData = {
     "@context": "https://schema.org",
@@ -88,9 +88,9 @@ export default async function FAQPage({ params }: Props) {
             在搜索框中输入州名或城市名，即可生成该地区的随机地址。例如：
           </p>
           <ul className="mt-2 ml-4 text-gray-700">
-            <li>• 输入 "Delaware" 生成特拉华州地址</li>
-            <li>• 输入 "Los Angeles" 生成洛杉矶地址</li>
-            <li>• 输入 "New York" 生成纽约地址</li>
+            <li>• 输入 &ldquo;Delaware&rdquo; 生成特拉华州地址</li>
+            <li>• 输入 &ldquo;Los Angeles&rdquo; 生成洛杉矶地址</li>
+            <li>• 输入 &ldquo;New York&rdquo; 生成纽约地址</li>
           </ul>
         </div>
 
