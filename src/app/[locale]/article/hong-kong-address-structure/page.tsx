@@ -1,4 +1,3 @@
-import { useTranslations } from 'next-intl';
 import { Metadata } from 'next';
 import Link from 'next/link';
 
@@ -13,14 +12,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title: isEnglish 
       ? 'Hong Kong Address Structure Explained - US Address Generator'
       : '香港地址结构详解 - US Address Generator',
-    description: isEnglish
+    description: isEnglish 
       ? 'Detailed analysis of Hong Kong address composition structure, including districts, streets, building numbers and the meaning and format of each component.'
       : '详细分析香港地址组成结构，包括区域、街道、楼宇编号以及各个组成部分的含义和格式。',
   };
 }
 
 export default function HongKongAddressStructurePage({ params }: Props) {
-  const t = useTranslations();
   const isEnglish = params.locale === 'en';
 
   return (
@@ -62,14 +60,11 @@ export default function HongKongAddressStructurePage({ params }: Props) {
                 <p className="text-gray-700 dark:text-gray-300 mb-4 leading-relaxed text-lg">
                   {isEnglish ? (
                     <>
-                      Hong Kong's address system is unique and reflects the city's complex urban development history. 
-                      Understanding the structure of Hong Kong addresses is essential for anyone dealing with mail delivery, 
-                      business registration, or property transactions in this international financial center.
+                      Understanding Hong Kong&apos;s address structure is crucial for effective communication and business operations in this international hub. The system&apos;s complexity reflects the city&apos;s unique history and urban development, but following the standard format ensures accurate mail delivery and professional correspondence.
                     </>
                   ) : (
                     <>
-                      香港的地址系统独特且复杂，反映了这座城市复杂的城市发展历史。
-                      了解香港地址结构对于任何需要处理邮件投递、商业注册或房地产交易的人来说都是必不可少的。
+                      了解香港的地址结构对于在这个国际枢纽进行有效沟通和商业运营至关重要。该系统的复杂性反映了这座城市独特的历史和城市发展，但遵循标准格式可确保准确的邮件投递和专业通信。
                     </>
                   )}
                 </p>
@@ -326,7 +321,7 @@ export default function HongKongAddressStructurePage({ params }: Props) {
                 <div className="bg-blue-50 dark:bg-blue-900/20 p-6 rounded-lg border-l-4 border-blue-500">
                   <p className="text-blue-800 dark:text-blue-200 leading-relaxed">
                     {isEnglish ? (
-                      'Understanding Hong Kong\'s address structure is crucial for effective communication and business operations in this international hub. The system\'s complexity reflects the city\'s unique history and urban development, but following the standard format ensures accurate mail delivery and professional correspondence.'
+                      'Understanding Hong Kong&apos;s address structure is crucial for effective communication and business operations in this international hub. The system&apos;s complexity reflects the city&apos;s unique history and urban development, but following the standard format ensures accurate mail delivery and professional correspondence.'
                     ) : (
                       '了解香港的地址结构对于在这个国际枢纽进行有效沟通和商业运营至关重要。该系统的复杂性反映了这座城市独特的历史和城市发展，但遵循标准格式可确保准确的邮件投递和专业通信。'
                     )}

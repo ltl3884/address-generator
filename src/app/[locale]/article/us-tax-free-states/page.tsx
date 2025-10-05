@@ -1,4 +1,3 @@
-import { useTranslations } from 'next-intl';
 import { Metadata } from 'next';
 
 interface PageProps {
@@ -11,17 +10,14 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const isEnglish = params.locale === 'en';
   
   return {
-    title: isEnglish 
-      ? 'Introduction to US Tax-Free States - US Address Generator'
-      : '美国免税州简介 - US Address Generator',
-    description: isEnglish
-      ? 'Learn about the detailed information of various tax-free states in the US, including tax policies and residential advantages.'
-      : '了解美国免税州的详细信息，包括各州的税收政策和优势。',
+    title: isEnglish ? 'Why Delaware is the Best Tax-Free State?' : '为什么特拉华州是最佳免税州？',
+    description: isEnglish 
+      ? 'Discover why Delaware stands out as the premier tax-free state for businesses and individuals. Learn about its unique advantages, business-friendly policies, and strategic benefits.'
+      : '了解为什么特拉华州是企业和个人的首选免税州。了解其独特优势、商业友好政策和战略利益。',
   };
 }
 
 export default function UsTaxFreeStatesPage({ params }: PageProps) {
-  const t = useTranslations();
   const isEnglish = params.locale === 'en';
 
   return (

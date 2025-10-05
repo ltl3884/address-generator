@@ -1,4 +1,3 @@
-import { useTranslations } from 'next-intl';
 import { Metadata } from 'next';
 
 interface PageProps {
