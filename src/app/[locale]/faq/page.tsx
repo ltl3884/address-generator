@@ -1,7 +1,4 @@
-import { useTranslations } from 'next-intl';
-import { getMessages } from 'next-intl/server';
 import { generatePageMetadata } from '@/lib/metadata';
-import StructuredData from '@/components/StructuredData';
 
 type Props = {
   params: Promise<{ locale: string }>;
@@ -14,7 +11,6 @@ export async function generateMetadata({ params }: Props) {
 
 export default async function FAQPage({ params }: Props) {
   const { locale } = await params;
-  const messages = await getMessages({ locale });
   
   const faqData = {
     "@context": "https://schema.org",
@@ -33,7 +29,7 @@ export default async function FAQPage({ params }: Props) {
         "name": "如何生成指定州的地址？",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "在搜索框中输入州名，即可生成该州的随机地址。例如输入Delaware，点击搜索后即可生成特拉华州的随机地址。"
+          "text": "在搜索框中输入州名或城市名，即可生成该地区的随机地址。例如输入Delaware生成特拉华州地址，输入Los Angeles生成洛杉矶地址。"
         }
       },
       {
@@ -166,7 +162,7 @@ export default async function FAQPage({ params }: Props) {
             💾 如何保存生成的地址？
           </h2>
           <p className="text-gray-700 leading-relaxed">
-            点击地址信息下方的"保存"按钮，即可将生成的地址保存到本地浏览器。保存的地址可以在"我的保存地址"页面查看和管理，支持批量删除和导出功能。
+            点击地址信息下方的&ldquo;保存&rdquo;按钮，即可将生成的地址保存到本地浏览器。保存的地址可以在&ldquo;我的保存地址&rdquo;页面查看和管理，支持批量删除和导出功能。
           </p>
         </div>
 
