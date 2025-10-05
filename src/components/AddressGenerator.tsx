@@ -51,6 +51,7 @@ export default function AddressGenerator() {
   const tSavedAddresses = useTranslations('saved_addresses');
   const tNavigation = useTranslations('navigation');
   const tFaq = useTranslations('faq');
+  const tBlog = useTranslations('blog');
   const tFooter = useTranslations('footer');
 
   const [isDark, setIsDark] = useState(false);
@@ -924,6 +925,69 @@ export default function AddressGenerator() {
               <p className="text-subtle-light dark:text-subtle-dark leading-relaxed">
                 {tFaq('questions.q4.answer')}
               </p>
+            </div>
+          </div>
+        </section>
+
+        {/* Latest Blog Articles Section */}
+        <section className="mt-8 bg-surface-light dark:glass-morphism p-6 rounded-lg shadow-card dark:shadow-glass border border-border-light dark:border-border-glass backdrop-blur-glass">
+          <h2 className="text-2xl font-bold text-primary mb-6 text-center">{tBlog('title')}</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6 max-w-6xl mx-auto">
+            <div className="bg-white dark:bg-gray-800/50 p-5 rounded-lg border border-border-light dark:border-border-dark hover:shadow-lg transition-shadow duration-300">
+              <Link href="/article/us-address-structure" target="_blank" rel="noopener noreferrer" className="block group">
+                <h3 className="text-lg font-semibold text-text-light dark:text-text-dark mb-3 flex items-center group-hover:text-primary transition-colors">
+                  <span className="material-icons text-primary mr-2">article</span>
+                  {tBlog('articles.us_tax_free_states.title')}
+                </h3>
+                <p className="text-subtle-light dark:text-subtle-dark leading-relaxed">
+                  {tBlog('articles.us_tax_free_states.description')}
+                </p>
+                <div className="mt-3 text-primary text-sm font-medium group-hover:underline">
+                  {tBlog('read_more')}
+                </div>
+              </Link>
+            </div>
+            <div className="bg-white dark:bg-gray-800/50 p-5 rounded-lg border border-border-light dark:border-border-dark hover:shadow-lg transition-shadow duration-300">
+              <Link href="/article/us-address-structure" className="block group">
+                <h3 className="text-lg font-semibold text-text-light dark:text-text-dark mb-3 flex items-center group-hover:text-primary transition-colors">
+                  <span className="material-icons text-primary mr-2">article</span>
+                  {tBlog('articles.us_address_structure.title')}
+                </h3>
+                <p className="text-subtle-light dark:text-subtle-dark leading-relaxed">
+                  {tBlog('articles.us_address_structure.description')}
+                </p>
+                <div className="mt-3 text-primary text-sm font-medium group-hover:underline">
+                   {tBlog('read_more')}
+                 </div>
+              </Link>
+            </div>
+            <div className="bg-white dark:bg-gray-800/50 p-5 rounded-lg border border-border-light dark:border-border-dark hover:shadow-lg transition-shadow duration-300">
+              <Link href="/article/why-delaware-best-tax-free" className="block group">
+                <h3 className="text-lg font-semibold text-text-light dark:text-text-dark mb-3 flex items-center group-hover:text-primary transition-colors">
+                  <span className="material-icons text-primary mr-2">article</span>
+                  {tBlog('articles.why_delaware_best_tax_free.title')}
+                </h3>
+                <p className="text-subtle-light dark:text-subtle-dark leading-relaxed">
+                  {tBlog('articles.why_delaware_best_tax_free.description')}
+                </p>
+                <div className="mt-3 text-primary text-sm font-medium group-hover:underline">
+                   {tBlog('read_more')}
+                 </div>
+              </Link>
+            </div>
+            <div className="bg-white dark:bg-gray-800/50 p-5 rounded-lg border border-border-light dark:border-border-dark hover:shadow-lg transition-shadow duration-300">
+              <Link href="/article/hong-kong-address-structure" className="block group">
+                <h3 className="text-lg font-semibold text-text-light dark:text-text-dark mb-3 flex items-center group-hover:text-primary transition-colors">
+                  <span className="material-icons text-primary mr-2">article</span>
+                  {tBlog('articles.hong_kong_address_structure.title')}
+                </h3>
+                <p className="text-subtle-light dark:text-subtle-dark leading-relaxed">
+                  {tBlog('articles.hong_kong_address_structure.description')}
+                </p>
+                <div className="mt-3 text-primary text-sm font-medium group-hover:underline">
+                   {tBlog('read_more')}
+                 </div>
+              </Link>
             </div>
           </div>
         </section>

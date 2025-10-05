@@ -154,6 +154,28 @@
       }
     }
   },
+  "blog": {
+    "title": "Latest Articles",
+    "read_more": "Read More →",
+    "articles": {
+      "us_tax_free_states": {
+        "title": "Introduction to US Tax-Free States",
+        "description": "Learn about the detailed information of various tax-free states in the US, including tax policies and residential advantages."
+      },
+      "us_address_structure": {
+        "title": "Understanding US Address Structure",
+        "description": "Deep dive into the composition structure of US addresses, including the meaning of streets, cities, states, zip codes and other components."
+      },
+      "why_delaware_best_tax_free": {
+        "title": "Why Delaware is the Best Tax-Free State?",
+        "description": "In-depth analysis of Delaware's tax advantages, business environment, and registration convenience to understand why it's considered the best tax-free state."
+      },
+      "hong_kong_address_structure": {
+        "title": "Hong Kong Address Structure Explained",
+        "description": "Detailed analysis of Hong Kong address composition structure, including districts, streets, building numbers and the meaning and format of each component."
+      }
+    }
+  },
   "footer": {
     "copyright": "Copyright © 2025 address-generator.xyz. All rights reserved.",
     "disclaimer": "The generated address data comes from publicly available online resources, not for commercial use, for learning reference only."

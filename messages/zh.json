@@ -154,6 +154,28 @@
       }
     }
   },
+  "blog": {
+    "title": "最新博文",
+    "read_more": "阅读更多 →",
+    "articles": {
+      "us_tax_free_states": {
+        "title": "美国免税州简介",
+        "description": "了解美国各个免税州的详细信息，包括税收政策、居住优势等。"
+      },
+      "us_address_structure": {
+        "title": "解析美国地址结构",
+        "description": "深入了解美国地址的组成结构，包括街道、城市、州、邮编等各部分的含义。"
+      },
+      "why_delaware_best_tax_free": {
+        "title": "为什么特拉华是最好的免税州?",
+        "description": "深入分析特拉华州的税收优势、商业环境和注册便利性，了解为什么它被认为是最佳免税州。"
+      },
+      "hong_kong_address_structure": {
+        "title": "香港地址结构详解",
+        "description": "详细解析香港地址的组成结构，包括区域、街道、大厦编号等各部分的含义和格式。"
+      }
+    }
+  },
   "footer": {
     "copyright": "Copyright © 2025 address-generator.xyz. All rights reserved.",
     "disclaimer": "地址生成的数据来自于网上的公开资料, 不用于任何商业用途, 仅供学习参考."
