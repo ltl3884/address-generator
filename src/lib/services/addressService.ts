@@ -1,4 +1,6 @@
 import { PrismaClient } from '@prisma/client';
+import { firstNames } from '../firstNamesData';
+import { lastNames } from '../lastNamesData';
 
 // 开发环境启用查询日志
 const prisma = new PrismaClient({
@@ -7,6 +9,8 @@ const prisma = new PrismaClient({
 
 export interface AddressData {
   fullName: string;
+  firstName: string;
+  lastName: string;
   gender: string;
   birthday: string;
   address: string;
@@ -19,6 +23,27 @@ export interface AddressData {
 }
 
 export class AddressService {
+  /**
+   * 从数组中随机选择一个元素
+   * @param array 要选择的数组
+   * @returns 随机选择的元素
+   */
+  static getRandomFromArray<T>(array: T[]): T {
+    const randomIndex = Math.floor(Math.random() * array.length);
+    return array[randomIndex];
+  }
+
+  /**
+   * 获取随机的名字和姓氏
+   * @returns 包含 firstName 和 lastName 的对象
+   */
+  static getRandomNames(): { firstName: string; lastName: string } {
+    return {
+      firstName: this.getRandomFromArray(firstNames),
+      lastName: this.getRandomFromArray(lastNames),
+    };
+  }
+
   /**
    * 将字符串转换为标题格式
    * @param str 要转换的字符串
@@ -70,9 +95,12 @@ export class AddressService {
       }
 
       const address = addressInfo[0];
+      const randomNames = AddressService.getRandomNames();
 
       return {
         fullName: address.full_name,
+        firstName: randomNames.firstName,
+        lastName: randomNames.lastName,
         gender: address.gender,
         birthday: address.birthday,
         address: address.address,
@@ -130,9 +158,12 @@ export class AddressService {
       }
 
       const address = addressInfo[0];
+      const randomNames = AddressService.getRandomNames();
 
       return {
         fullName: address.full_name,
+        firstName: randomNames.firstName,
+        lastName: randomNames.lastName,
         gender: address.gender,
         birthday: address.birthday,
         address: address.address,

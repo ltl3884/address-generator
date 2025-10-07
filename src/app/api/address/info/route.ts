@@ -11,6 +11,8 @@ const AddressRequestSchema = z.object({
 // 响应数据类型
 interface AddressResponse {
   fullName: string;
+  firstName: string;
+  lastName: string;
   gender: string;
   birthday: string;
   address: string;

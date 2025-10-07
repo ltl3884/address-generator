@@ -9,6 +9,8 @@ import LanguageSwitcher from './LanguageSwitcher';
 
 interface AddressData {
   fullName: string;
+  firstName: string;
+  lastName: string;
   gender: string;
   birthday: string;
   address: string;
@@ -23,6 +25,8 @@ interface AddressData {
 interface SavedAddress {
   id: string;
   fullName: string;
+  firstName: string;
+  lastName: string;
   gender: string;
   birthday: string;
   city: string;
@@ -74,6 +78,8 @@ export default function AddressGenerator() {
   const inputRef = useRef<HTMLInputElement>(null);
   const [addressData, setAddressData] = useState<AddressData>({
     fullName: '',
+    firstName: '',
+    lastName: '',
     gender: '',
     birthday: '',
     address: '',
@@ -324,6 +330,8 @@ export default function AddressGenerator() {
     const savedAddress: SavedAddress = {
       id: Date.now().toString(), // 使用时间戳作为唯一ID
       fullName: addressData.fullName,
+      firstName: addressData.firstName,
+      lastName: addressData.lastName,
       gender: addressData.gender,
       birthday: addressData.birthday,
       city: addressData.city,
@@ -724,13 +732,14 @@ export default function AddressGenerator() {
             {/* Address Data Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-1 text-sm">
               <div className="flex border-b border-dashed border-border-light dark:border-border-dark py-3">
-                <span className="w-20 text-subtle-light dark:text-subtle-dark">{tAddress('full_name')}</span>
-                <span className="flex-1 text-text-light dark:text-text-dark">{addressData.fullName}</span>
+                <span className="w-20 text-subtle-light dark:text-subtle-dark">姓</span>
+                <span className="flex-1 text-text-light dark:text-text-dark">{addressData.lastName}</span>
               </div>
               <div className="flex border-b border-dashed border-border-light dark:border-border-dark py-3">
-                <span className="w-20 text-subtle-light dark:text-subtle-dark">{tAddress('gender')}</span>
-                <span className="flex-1 text-text-light dark:text-text-dark">{addressData.gender}</span>
+                <span className="w-20 text-subtle-light dark:text-subtle-dark">名</span>
+                <span className="flex-1 text-text-light dark:text-text-dark">{addressData.firstName}</span>
               </div>
+
               <div className="flex border-b border-dashed border-border-light dark:border-border-dark py-3">
                 <span className="w-20 text-subtle-light dark:text-subtle-dark">{tAddress('birthday')}</span>
                 <span className="flex-1 text-text-light dark:text-text-dark">{addressData.birthday}</span>

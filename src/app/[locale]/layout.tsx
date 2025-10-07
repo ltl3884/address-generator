@@ -85,9 +85,13 @@ export async function generateMetadata({
       },
     },
     verification: {
-      google: 'google-site-verification-code',
-      yandex: 'yandex-verification-code',
-      yahoo: 'yahoo-site-verification-code',
+      // 步骤1: 访问 https://search.google.com/search-console/settings/ownership
+      // 步骤2: 点击"添加验证方法" → 选择"HTML标签"
+      // 步骤3: 复制 content="..." 中的验证码粘贴到下面
+      // 例如：google: 'abcdefghijklmnopqrstuvwxyz1234567890'
+      google: 'your-google-verification-code-here',
+      yandex: 'your-yandex-verification-code-here',
+      yahoo: 'your-yahoo-verification-code-here',
     },
     other: {
       'msapplication-TileColor': '#2563eb',
