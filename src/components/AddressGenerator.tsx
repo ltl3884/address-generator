@@ -69,6 +69,7 @@ export default function AddressGenerator() {
   const [currentPlace, setCurrentPlace] = useState(''); // 添加当前地点状态
   const [isClient, setIsClient] = useState(false); // 添加客户端状态标识
   const [savedAddressCount, setSavedAddressCount] = useState(0); // 添加已保存地址个数状态
+  const [showZipCodeTooltip, setShowZipCodeTooltip] = useState(false); // 添加邮编提示状态
 
   // 自动补全相关状态
   const [suggestions, setSuggestions] = useState<string[]>([]);
@@ -761,7 +762,29 @@ export default function AddressGenerator() {
               </div>
               <div className="flex border-b border-dashed border-border-light dark:border-border-dark py-3">
                 <span className="w-20 text-subtle-light dark:text-subtle-dark">{tAddress('zip_code')}</span>
-                <span className="flex-1 text-text-light dark:text-text-dark">{addressData.zipCode}</span>
+                <div className="flex-1 flex items-center">
+                  <span className="text-text-light dark:text-text-dark">{addressData.zipCode}</span>
+                  {isClient && currentCountry === 'hk' && (
+                    <div className="relative ml-2">
+                      <span 
+                        className="inline-flex items-center justify-center w-4 h-4 text-xs text-white bg-blue-500 rounded-full cursor-help hover:bg-blue-600 transition-colors"
+                        onMouseEnter={() => setShowZipCodeTooltip(true)}
+                        onMouseLeave={() => setShowZipCodeTooltip(false)}
+                        aria-label="香港邮编填写说明"
+                      >
+                        ?
+                      </span>
+                      {showZipCodeTooltip && (
+                        <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-80 p-3 bg-gray-900 text-white text-xs rounded-lg shadow-lg z-50">
+                          <div className="relative">
+                            香港邮政建议在填写时留空栏位，或尝试填写"000"、"0000"、"000000"或"HKG"。 中国邮政分配的邮政编码"999077"在本地并不使用，仅在中国大陆的跨境运输中为应对系统技术限制而存在。
+                            <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-900"></div>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
               </div>
               <div className="flex border-b border-dashed border-border-light dark:border-border-dark py-3">
                 <span className="w-20 text-subtle-light dark:text-subtle-dark">{tAddress('telephone')}</span>
