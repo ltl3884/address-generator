@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
+import LanguageSwitcher from '@/components/LanguageSwitcher';
 
 interface SavedAddress {
   id: string;
@@ -19,11 +20,7 @@ interface SavedAddress {
   createdAt: number;
 }
 
-interface Props {
-  params: { locale: string };
-}
-
-export default function SavedAddresses({ params }: Props) {
+export default function SavedAddresses() {
   // Translation hooks
   const tTheme = useTranslations('theme');
   const tAddress = useTranslations('address');
@@ -232,6 +229,7 @@ export default function SavedAddresses({ params }: Props) {
             <h1 className="text-3xl font-bold text-primary">{tSavedAddresses('page_title')}</h1>
           </div>
           <div className="flex items-center space-x-4">
+            <LanguageSwitcher />
             <button
               className={`
                 relative px-4 py-2 rounded-lg font-medium text-sm transition-all duration-300 ease-in-out
