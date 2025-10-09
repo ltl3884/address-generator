@@ -732,14 +732,17 @@ export default function AddressGenerator() {
             {/* Address Data Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-1 text-sm">
               <div className="flex border-b border-dashed border-border-light dark:border-border-dark py-3">
-                <span className="w-20 text-subtle-light dark:text-subtle-dark">姓</span>
-                <span className="flex-1 text-text-light dark:text-text-dark">{addressData.lastName}</span>
+                <span className="w-20 text-subtle-light dark:text-subtle-dark">姓名:</span>
+                <span className="flex-1 text-text-light dark:text-text-dark">
+                  {(currentCountry === 'tw' || currentCountry === 'hk' || currentCountry === 'sg') 
+                    ? addressData.fullName 
+                    : `${addressData.firstName} ${addressData.lastName}`}
+                </span>
               </div>
               <div className="flex border-b border-dashed border-border-light dark:border-border-dark py-3">
-                <span className="w-20 text-subtle-light dark:text-subtle-dark">名</span>
-                <span className="flex-1 text-text-light dark:text-text-dark">{addressData.firstName}</span>
+                <span className="w-20 text-subtle-light dark:text-subtle-dark">{tAddress('gender')}</span>
+                <span className="flex-1 text-text-light dark:text-text-dark">{addressData.gender}</span>
               </div>
-
               <div className="flex border-b border-dashed border-border-light dark:border-border-dark py-3">
                 <span className="w-20 text-subtle-light dark:text-subtle-dark">{tAddress('birthday')}</span>
                 <span className="flex-1 text-text-light dark:text-text-dark">{addressData.birthday}</span>
