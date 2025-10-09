@@ -112,7 +112,20 @@
     "address_count": "已保存的地址 ({count}个)",
     "back_to_home": "返回首页生成地址",
     "delete": "删除",
-    "copy": "复制"
+    "copy": "复制",
+    "csv_headers": {
+      "name": "姓名",
+      "gender": "性别", 
+      "birthday": "生日",
+      "city": "城市",
+      "state": "州/省",
+      "address": "地址",
+      "zipcode": "邮编",
+      "telephone": "电话",
+      "full_address": "完整地址",
+      "country": "国家",
+      "created_time": "保存时间"
+    }
   },
   "navigation": {
     "home": "首页",

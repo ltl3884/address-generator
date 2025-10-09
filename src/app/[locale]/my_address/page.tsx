@@ -19,13 +19,18 @@ interface SavedAddress {
   createdAt: number;
 }
 
-export default function SavedAddresses() {
+interface Props {
+  params: { locale: string };
+}
+
+export default function SavedAddresses({ params }: Props) {
   // Translation hooks
   const tTheme = useTranslations('theme');
   const tAddress = useTranslations('address');
   const tSavedAddresses = useTranslations('saved_addresses');
   const tNavigation = useTranslations('navigation');
   const tFooter = useTranslations('footer');
+  const tCsvHeaders = useTranslations('saved_addresses.csv_headers');
 
   const [isDark, setIsDark] = useState(false);
   const [savedAddresses, setSavedAddresses] = useState<SavedAddress[]>([]);
@@ -148,7 +153,17 @@ export default function SavedAddresses() {
 
       // CSV 头部
       const headers = [
-        '姓名', '性别', '生日', '城市', '州/省', '地址', '邮编', '电话', '完整地址', '国家', '保存时间'
+        tCsvHeaders('name'),
+        tCsvHeaders('gender'),
+        tCsvHeaders('birthday'),
+        tCsvHeaders('city'),
+        tCsvHeaders('state'),
+        tCsvHeaders('address'),
+        tCsvHeaders('zipcode'),
+        tCsvHeaders('telephone'),
+        tCsvHeaders('full_address'),
+        tCsvHeaders('country'),
+        tCsvHeaders('created_time')
       ];
 
       // 转换数据为 CSV 格式
@@ -362,7 +377,7 @@ export default function SavedAddresses() {
                       <span className="text-text-light dark:text-text-dark">{address.zipCode}</span>
                     </div>
                     <div className="flex items-center">
-                      <span className="w-16 text-subtle-light dark:text-subtle-dark">{tAddress('telephone')}:</span>
+                      <span className="w-26 text-subtle-light dark:text-subtle-dark">{tAddress('telephone')}:</span>
                       <span className="text-text-light dark:text-text-dark">{address.telephone}</span>
                     </div>
                     <div className="md:col-span-2">
@@ -373,7 +388,7 @@ export default function SavedAddresses() {
                     </div>
                     <div className="md:col-span-2">
                       <div className="flex items-start">
-                        <span className="w-16 text-subtle-light dark:text-subtle-dark">{tAddress('full_address')}:</span>
+                        <span className="w-25 text-subtle-light dark:text-subtle-dark">{tAddress('full_address')}:</span>
                         <span className="text-text-light dark:text-text-dark font-medium">{address.fullAddress}</span>
                         <button
                           onClick={() => handleCopyAddress(address.fullAddress, address.id)}

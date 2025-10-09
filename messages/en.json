@@ -112,7 +112,20 @@
     "address_count": "Saved Addresses ({count})",
     "back_to_home": "Back to Home to Generate Addresses",
     "delete": "Delete",
-    "copy": "Copy"
+    "copy": "Copy",
+    "csv_headers": {
+      "name": "Name",
+      "gender": "Gender", 
+      "birthday": "Birthday",
+      "city": "City",
+      "state": "State/Province",
+      "address": "Address",
+      "zipcode": "ZIP Code",
+      "telephone": "Phone",
+      "full_address": "Full Address",
+      "country": "Country",
+      "created_time": "Created Time"
+    }
   },
   "navigation": {
     "home": "Home",
