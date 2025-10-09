@@ -48,6 +48,8 @@
   "address": {
     "basic_info": "Basic Information",
     "full_name": "Full Name",
+    "first_name": "First Name",
+    "last_name": "Last Name",
     "gender": "Gender",
     "birthday": "Birthday",
     "city": "City",
@@ -56,11 +58,14 @@
     "zip_code": "ZIP Code",
     "telephone": "Phone Number",
     "full_address": "Full Address",
-    "country": "Country"
+    "country": "Country",
+    "hk_zipcode_tooltip_aria": "Hong Kong postal code filling instructions",
+    "hk_zipcode_tooltip_text": "Hong Kong Post recommends leaving the field blank, or try filling in \"000\", \"0000\", \"000000\" or \"HKG\". The postal code \"999077\" assigned by China Post is not used locally and only exists in cross-border transportation in mainland China to address system technical limitations."
   },
   "actions": {
     "generate": "Generate",
     "save": "Save",
+    "export": "Export",
     "generate_new": "Generate New Address",
     "save_address": "Save Address",
     "copy_address": "Copy Address",
@@ -72,7 +77,11 @@
     "save_failed": "Failed to save address, please try again",
     "copy_success": "Address copied to clipboard",
     "copy_failed": "Copy failed, please copy address manually",
-    "copy_failed_manual": "Copy failed, please copy address manually"
+    "copy_failed_manual": "Copy failed, please copy address manually",
+    "export_csv": "Export CSV",
+    "export_success": "Address data exported",
+    "export_failed": "Export failed, please try again",
+    "no_data_to_export": "No address data to export"
   },
   "saved_addresses": {
     "title": "My Saved Addresses",
@@ -84,7 +93,26 @@
     "clear_success": "All addresses cleared",
     "clear_failed": "Failed to clear, please try again",
     "load_failed": "Failed to load saved addresses",
-    "created_at": "Created At"
+    "created_at": "Created At",
+    "page_title": "My Saved Addresses",
+    "count_text": "Saved Addresses",
+    "count_unit": "",
+    "no_saved_addresses": "No saved addresses yet",
+    "back_to_generate": "Back to Home to Generate Addresses",
+    "delete_address": "Delete Address",
+    "export_csv": "Export",
+    "export_success": "Export successful",
+    "export_failed": "Export failed, please try again",
+    "no_data_export": "No data to export",
+    "copy_full_address": "Copy Full Address",
+    "copied": "Copied!",
+    "copy_failed": "Copy failed, please copy address manually",
+    "fallback_copy_failed": "Fallback copy method also failed",
+    "manual_copy_message": "Copy failed, please copy address manually",
+    "address_count": "Saved Addresses ({count})",
+    "back_to_home": "Back to Home to Generate Addresses",
+    "delete": "Delete",
+    "copy": "Copy"
   },
   "navigation": {
     "home": "Home",

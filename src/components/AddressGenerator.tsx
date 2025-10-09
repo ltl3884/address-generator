@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
-import { useTranslations } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
 import { filterCities } from '@/lib/cityData';
 import AutocompletePortal from './AutocompletePortal';
 import LanguageSwitcher from './LanguageSwitcher';
@@ -57,6 +57,14 @@ export default function AddressGenerator() {
   const tFaq = useTranslations('faq');
   const tBlog = useTranslations('blog');
   const tFooter = useTranslations('footer');
+  
+  // Get current locale
+  const locale = useLocale();
+  
+  // Dynamic width class based on locale
+  const getLabelWidth = () => {
+    return locale === 'zh' ? 'w-20' : 'w-30';
+  };
 
   const [isDark, setIsDark] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -379,6 +387,8 @@ export default function AddressGenerator() {
       setSaveMessage(prev => ({ ...prev, show: false }));
     }, 3000);
   };
+
+
 
   // 处理搜索输入变化，实现自动补全
   const handleSearchInputChange = (value: string) => {
@@ -733,7 +743,7 @@ export default function AddressGenerator() {
             {/* Address Data Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-1 text-sm">
               <div className="flex border-b border-dashed border-border-light dark:border-border-dark py-3">
-                <span className="w-20 text-subtle-light dark:text-subtle-dark">姓名:</span>
+                <span className="w-20 text-subtle-light dark:text-subtle-dark">{tAddress('full_name')}:</span>
                 <span className="flex-1 text-text-light dark:text-text-dark">
                   {(currentCountry === 'tw' || currentCountry === 'hk' || currentCountry === 'sg') 
                     ? addressData.fullName 
@@ -741,27 +751,27 @@ export default function AddressGenerator() {
                 </span>
               </div>
               <div className="flex border-b border-dashed border-border-light dark:border-border-dark py-3">
-                <span className="w-20 text-subtle-light dark:text-subtle-dark">{tAddress('gender')}</span>
+                <span className="w-20 text-subtle-light dark:text-subtle-dark">{tAddress('gender')}:</span>
                 <span className="flex-1 text-text-light dark:text-text-dark">{addressData.gender}</span>
               </div>
               <div className="flex border-b border-dashed border-border-light dark:border-border-dark py-3">
-                <span className="w-20 text-subtle-light dark:text-subtle-dark">{tAddress('birthday')}</span>
+                <span className="w-20 text-subtle-light dark:text-subtle-dark">{tAddress('birthday')}:</span>
                 <span className="flex-1 text-text-light dark:text-text-dark">{addressData.birthday}</span>
               </div>
               <div className="flex border-b border-dashed border-border-light dark:border-border-dark py-3">
-                <span className="w-20 text-subtle-light dark:text-subtle-dark">{tAddress('city')}</span>
+                <span className="w-20 text-subtle-light dark:text-subtle-dark">{tAddress('city')}:</span>
                 <span className="flex-1 text-text-light dark:text-text-dark">{addressData.city}</span>
               </div>
               <div className="flex border-b border-dashed border-border-light dark:border-border-dark py-3">
-                <span className="w-20 text-subtle-light dark:text-subtle-dark">{tAddress('state')}</span>
+                <span className="w-20 text-subtle-light dark:text-subtle-dark">{tAddress('state')}:</span>
                 <span className="flex-1 text-text-light dark:text-text-dark">{!isClient ? addressData.state : currentCountry === 'us' ? `${addressData.stateFull}(${addressData.state})` : addressData.state}</span>
               </div>
               <div className="flex border-b border-dashed border-border-light dark:border-border-dark py-3">
-                <span className="w-20 text-subtle-light dark:text-subtle-dark">{tAddress('address')}</span>
+                <span className="w-20 text-subtle-light dark:text-subtle-dark">{tAddress('address')}:</span>
                 <span className="flex-1 text-text-light dark:text-text-dark">{addressData.address}</span>
               </div>
-              <div className="flex border-b border-dashed border-border-light dark:border-border-dark py-3">
-                <span className="w-20 text-subtle-light dark:text-subtle-dark">{tAddress('zip_code')}</span>
+              <div className="flex items-center border-b border-dashed border-border-light dark:border-border-dark py-3">
+                <span className="w-20 text-subtle-light dark:text-subtle-dark flex items-center">{tAddress('zip_code')}:</span>
                 <div className="flex-1 flex items-center">
                   <span className="text-text-light dark:text-text-dark">{addressData.zipCode}</span>
                   {isClient && currentCountry === 'hk' && (
@@ -770,14 +780,14 @@ export default function AddressGenerator() {
                         className="inline-flex items-center justify-center w-4 h-4 text-xs text-white bg-blue-500 rounded-full cursor-help hover:bg-blue-600 transition-colors"
                         onMouseEnter={() => setShowZipCodeTooltip(true)}
                         onMouseLeave={() => setShowZipCodeTooltip(false)}
-                        aria-label="香港邮编填写说明"
+                        aria-label={tAddress('hk_zipcode_tooltip_aria')}
                       >
                         ?
                       </span>
                       {showZipCodeTooltip && (
                         <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-80 p-3 bg-gray-900 text-white text-xs rounded-lg shadow-lg z-50">
                           <div className="relative">
-                            香港邮政建议在填写时留空栏位，或尝试填写&quot;000&quot;、&quot;0000&quot;、&quot;000000&quot;或&quot;HKG&quot;。 中国邮政分配的邮政编码&quot;999077&quot;在本地并不使用，仅在中国大陆的跨境运输中为应对系统技术限制而存在。
+                            {tAddress('hk_zipcode_tooltip_text')}
                             <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-900"></div>
                           </div>
                         </div>
@@ -787,11 +797,11 @@ export default function AddressGenerator() {
                 </div>
               </div>
               <div className="flex border-b border-dashed border-border-light dark:border-border-dark py-3">
-                <span className="w-20 text-subtle-light dark:text-subtle-dark">{tAddress('telephone')}</span>
+                <span className={`${getLabelWidth()} text-subtle-light dark:text-subtle-dark`}>{tAddress('telephone')}:</span>
                 <span className="flex-1 text-text-light dark:text-text-dark">{addressData.telephone}</span>
               </div>
               <div className="flex border-b border-dashed border-border-light dark:border-border-dark py-3 md:col-span-2">
-                <span className="w-20 text-subtle-light dark:text-subtle-dark">{tAddress('full_address')}</span>
+                <span className={`${getLabelWidth()} text-subtle-light dark:text-subtle-dark`}>{tAddress('full_address')}:</span>
                 <div className="flex-1 flex items-center">
                   <span className="text-text-light dark:text-text-dark">
                     {!isClient 

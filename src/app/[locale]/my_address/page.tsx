@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 
 interface SavedAddress {
   id: string;
@@ -19,6 +20,13 @@ interface SavedAddress {
 }
 
 export default function SavedAddresses() {
+  // Translation hooks
+  const tTheme = useTranslations('theme');
+  const tAddress = useTranslations('address');
+  const tSavedAddresses = useTranslations('saved_addresses');
+  const tNavigation = useTranslations('navigation');
+  const tFooter = useTranslations('footer');
+
   const [isDark, setIsDark] = useState(false);
   const [savedAddresses, setSavedAddresses] = useState<SavedAddress[]>([]);
   const [copySuccess, setCopySuccess] = useState('');
@@ -85,10 +93,10 @@ export default function SavedAddresses() {
       const updatedAddresses = savedAddresses.filter(addr => addr.id !== id);
       setSavedAddresses(updatedAddresses);
       localStorage.setItem('savedAddresses', JSON.stringify(updatedAddresses));
-      showActionMessage('地址删除成功', 'info');
+      showActionMessage(tSavedAddresses('delete_success'), 'info');
     } catch (error) {
       console.error('删除地址失败:', error);
-      showActionMessage('删除地址失败，请重试', 'error');
+      showActionMessage(tSavedAddresses('delete_failed'), 'error');
     }
   };
 
@@ -96,10 +104,10 @@ export default function SavedAddresses() {
     try {
       setSavedAddresses([]);
       localStorage.setItem('savedAddresses', '[]');
-      showActionMessage('所有地址已清空', 'info');
+      showActionMessage(tSavedAddresses('clear_success'), 'info');
     } catch (error) {
       console.error('清空地址失败:', error);
-      showActionMessage('清空地址失败，请重试', 'error');
+      showActionMessage(tSavedAddresses('clear_failed'), 'error');
     }
   };
 
@@ -125,9 +133,66 @@ export default function SavedAddresses() {
         }, 2000);
       } catch (fallbackError) {
         console.error('降级复制方法也失败:', fallbackError);
-        showActionMessage('复制失败，请手动复制地址', 'error');
+        showActionMessage(tSavedAddresses('manual_copy_message'), 'error');
       }
       document.body.removeChild(textArea);
+    }
+  };
+
+  const handleExportCSV = () => {
+    try {
+      if (savedAddresses.length === 0) {
+        showActionMessage(tSavedAddresses('no_data_export'), 'error');
+        return;
+      }
+
+      // CSV 头部
+      const headers = [
+        '姓名', '性别', '生日', '城市', '州/省', '地址', '邮编', '电话', '完整地址', '国家', '保存时间'
+      ];
+
+      // 转换数据为 CSV 格式
+      const csvData = savedAddresses.map(address => [
+        address.fullName,
+        address.gender,
+        address.birthday,
+        address.city,
+        address.state,
+        address.address,
+        address.zipCode,
+        address.telephone,
+        address.fullAddress,
+        address.country,
+        formatDate(address.createdAt)
+      ]);
+
+      // 组合头部和数据
+      const csvContent = [headers, ...csvData]
+        .map(row => row.map(field => `"${field}"`).join(','))
+        .join('\n');
+
+      // 创建 Blob 对象
+      const blob = new Blob(['\uFEFF' + csvContent], { type: 'text/csv;charset=utf-8;' });
+      
+      // 创建下载链接
+      const link = document.createElement('a');
+      const url = URL.createObjectURL(blob);
+      link.setAttribute('href', url);
+      link.setAttribute('download', `saved_addresses_${new Date().toISOString().split('T')[0]}.csv`);
+      link.style.visibility = 'hidden';
+      
+      // 触发下载
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      
+      // 清理 URL 对象
+      URL.revokeObjectURL(url);
+      
+      showActionMessage(tSavedAddresses('export_success'), 'info');
+    } catch (error) {
+      console.error('导出失败:', error);
+      showActionMessage(tSavedAddresses('export_failed'), 'error');
     }
   };
 
@@ -149,7 +214,7 @@ export default function SavedAddresses() {
             >
               <path d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V7h10v2z"/>
             </svg>
-            <h1 className="text-3xl font-bold text-primary">我的保存地址</h1>
+            <h1 className="text-3xl font-bold text-primary">{tSavedAddresses('page_title')}</h1>
           </div>
           <div className="flex items-center space-x-4">
             <button
@@ -162,7 +227,7 @@ export default function SavedAddresses() {
                 flex items-center space-x-2 min-w-[120px] justify-center
               `}
               onClick={handleThemeToggle}
-              aria-label={isDark ? "切换到浅色模式" : "切换到深色模式"}
+              aria-label={isDark ? tTheme('switch_to_light') : tTheme('switch_to_dark')}
             >
               <span className="material-icons text-lg">
                 {isDark ? 'light_mode' : 'dark_mode'}
@@ -175,13 +240,13 @@ export default function SavedAddresses() {
         {/* Navigation */}
         <nav className="bg-surface-light dark:glass-morphism p-4 rounded-lg shadow-card dark:shadow-glass mb-6 border border-border-light dark:border-border-glass backdrop-blur-glass">
           <ul className="flex flex-wrap gap-x-8 gap-y-2 text-sm">
-            <li><Link className="text-primary hover:text-primary-600 transition-colors font-medium" href="/">首页</Link></li>
-            <li><Link className="text-primary hover:text-primary-600 transition-colors font-medium" href="/us">美国地址</Link></li>
-            <li><Link className="text-primary hover:text-primary-600 transition-colors font-medium" href="/tw">台湾地址</Link></li>
-            <li><Link className="text-primary hover:text-primary-600 transition-colors font-medium" href="/ca">加拿大地址</Link></li>
-            <li><Link className="text-primary hover:text-primary-600 transition-colors font-medium" href="/hk">香港地址</Link></li>
-            <li><Link className="text-primary hover:text-primary-600 transition-colors font-medium" href="/sg">新加坡地址</Link></li>
-            <li><Link className="text-primary hover:text-primary-600 transition-colors font-medium" href="/uk">英国地址</Link></li>
+            <li><Link className="text-primary hover:text-primary-600 transition-colors font-medium" href="/">{tNavigation('home')}</Link></li>
+            <li><Link className="text-primary hover:text-primary-600 transition-colors font-medium" href="/us">{tNavigation('us_address')}</Link></li>
+            <li><Link className="text-primary hover:text-primary-600 transition-colors font-medium" href="/tw">{tNavigation('tw_address')}</Link></li>
+            <li><Link className="text-primary hover:text-primary-600 transition-colors font-medium" href="/ca">{tNavigation('ca_address')}</Link></li>
+            <li><Link className="text-primary hover:text-primary-600 transition-colors font-medium" href="/hk">{tNavigation('hk_address')}</Link></li>
+            <li><Link className="text-primary hover:text-primary-600 transition-colors font-medium" href="/sg">{tNavigation('sg_address')}</Link></li>
+            <li><Link className="text-primary hover:text-primary-600 transition-colors font-medium" href="/uk">{tNavigation('uk_address')}</Link></li>
           </ul>
         </nav>
 
@@ -209,15 +274,24 @@ export default function SavedAddresses() {
           {/* 操作区域 */}
           <div className="flex justify-between items-center mb-6">
             <h2 className="text-xl font-semibold text-primary">
-              已保存的地址 ({savedAddresses.length}个)
+              {tSavedAddresses('address_count', { count: savedAddresses.length })}
             </h2>
             {savedAddresses.length > 0 && (
-              <button
-                className="bg-red-500 text-white px-4 py-2 rounded-md font-medium text-sm hover:bg-red-600 transition-colors"
-                onClick={handleClearAll}
-              >
-                清空所有
-              </button>
+              <div className="flex space-x-3">
+                <button
+                  className="bg-green-500 text-white px-4 py-2 rounded-md font-medium text-sm hover:bg-green-600 transition-colors flex items-center space-x-2"
+                  onClick={handleExportCSV}
+                >
+                  <span className="material-icons text-sm">download</span>
+                  <span>{tSavedAddresses('export_csv')}</span>
+                </button>
+                <button
+                  className="bg-red-500 text-white px-4 py-2 rounded-md font-medium text-sm hover:bg-red-600 transition-colors"
+                  onClick={handleClearAll}
+                >
+                  {tSavedAddresses('clear_all')}
+                </button>
+              </div>
             )}
           </div>
 
@@ -228,13 +302,13 @@ export default function SavedAddresses() {
                 <span className="material-icons text-6xl">bookmark_border</span>
               </div>
               <p className="text-lg text-gray-600 dark:text-gray-300 mb-4">
-                还没有保存任何地址
+                {tSavedAddresses('no_saved_addresses')}
               </p>
               <Link
                 href="/"
                 className="bg-primary text-white px-6 py-2 rounded-md font-medium text-sm hover:bg-primary-600 transition-colors inline-block"
               >
-                返回首页生成地址
+                {tSavedAddresses('back_to_home')}
               </Link>
             </div>
           ) : (
@@ -256,49 +330,50 @@ export default function SavedAddresses() {
                     <div className="flex space-x-2">
                       <button
                         onClick={() => handleDeleteAddress(address.id)}
-                        className="p-2 rounded-md text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
-                        title="删除地址"
-                        aria-label="删除地址"
+                        className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 transition-colors text-sm flex items-center space-x-1"
                       >
-                        <span className="material-icons text-sm">delete</span>
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                        </svg>
+                        <span>{tSavedAddresses('delete')}</span>
                       </button>
                     </div>
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
                     <div className="flex items-center">
-                      <span className="w-16 text-subtle-light dark:text-subtle-dark">性别:</span>
+                      <span className="w-16 text-subtle-light dark:text-subtle-dark">{tAddress('gender')}:</span>
                       <span className="text-text-light dark:text-text-dark">{address.gender}</span>
                     </div>
                     <div className="flex items-center">
-                      <span className="w-16 text-subtle-light dark:text-subtle-dark">生日:</span>
+                      <span className="w-16 text-subtle-light dark:text-subtle-dark">{tAddress('birthday')}:</span>
                       <span className="text-text-light dark:text-text-dark">{address.birthday}</span>
                     </div>
                     <div className="flex items-center">
-                      <span className="w-16 text-subtle-light dark:text-subtle-dark">城市:</span>
+                      <span className="w-16 text-subtle-light dark:text-subtle-dark">{tAddress('city')}:</span>
                       <span className="text-text-light dark:text-text-dark">{address.city}</span>
                     </div>
                     <div className="flex items-center">
-                      <span className="w-16 text-subtle-light dark:text-subtle-dark">州/省:</span>
+                      <span className="w-16 text-subtle-light dark:text-subtle-dark">{tAddress('state')}:</span>
                       <span className="text-text-light dark:text-text-dark">{address.state}</span>
                     </div>
                     <div className="flex items-center">
-                      <span className="w-16 text-subtle-light dark:text-subtle-dark">邮编:</span>
+                      <span className="w-16 text-subtle-light dark:text-subtle-dark">{tAddress('zip_code')}:</span>
                       <span className="text-text-light dark:text-text-dark">{address.zipCode}</span>
                     </div>
                     <div className="flex items-center">
-                      <span className="w-16 text-subtle-light dark:text-subtle-dark">电话:</span>
+                      <span className="w-16 text-subtle-light dark:text-subtle-dark">{tAddress('telephone')}:</span>
                       <span className="text-text-light dark:text-text-dark">{address.telephone}</span>
                     </div>
                     <div className="md:col-span-2">
                       <div className="flex items-start">
-                        <span className="w-16 text-subtle-light dark:text-subtle-dark">地址:</span>
+                        <span className="w-16 text-subtle-light dark:text-subtle-dark">{tAddress('address')}:</span>
                         <span className="text-text-light dark:text-text-dark">{address.address}</span>
                       </div>
                     </div>
                     <div className="md:col-span-2">
                       <div className="flex items-start">
-                        <span className="w-16 text-subtle-light dark:text-subtle-dark">完整地址:</span>
+                        <span className="w-16 text-subtle-light dark:text-subtle-dark">{tAddress('full_address')}:</span>
                         <span className="text-text-light dark:text-text-dark font-medium">{address.fullAddress}</span>
                         <button
                           onClick={() => handleCopyAddress(address.fullAddress, address.id)}
@@ -310,8 +385,8 @@ export default function SavedAddresses() {
                             }
                             flex items-center justify-center w-6 h-6 flex-shrink-0
                           `}
-                          title={copySuccess === address.id ? "已复制!" : "复制完整地址"}
-                          aria-label={copySuccess === address.id ? "已复制完整地址" : "复制完整地址"}
+                          title={copySuccess === address.id ? tSavedAddresses('copied') : tSavedAddresses('copy_full_address')}
+                          aria-label={copySuccess === address.id ? tSavedAddresses('copied_full_address') : tSavedAddresses('copy_full_address')}
                         >
                           <span className="material-icons text-sm">
                             {copySuccess === address.id ? 'check' : 'content_copy'}
@@ -329,8 +404,7 @@ export default function SavedAddresses() {
         {/* Footer */}
         <footer className="mt-8 bg-surface-light dark:glass-morphism p-6 rounded-lg shadow-card dark:shadow-glass border border-border-light dark:border-border-glass backdrop-blur-glass text-sm">
           <div className="pt-4 text-center text-xs text-subtle-light dark:text-subtle-dark">
-            <p>Copyright © 2021 address-gen.ccc. All rights reserved.</p>
-            <p className="mt-1">美国地址生成的数据来自于各个大学学习, 学习资料以及部分网友的分享, 不用于任何商业用途, 仅供学习参考.</p>
+            <p>{tFooter('copyright')}</p>
           </div>
         </footer>
       </div>

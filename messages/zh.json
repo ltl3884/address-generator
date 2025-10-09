@@ -48,6 +48,8 @@
   "address": {
     "basic_info": "基本资料",
     "full_name": "姓名",
+    "first_name": "名",
+    "last_name": "姓",
     "gender": "性别",
     "birthday": "生日",
     "city": "城市",
@@ -56,11 +58,14 @@
     "zip_code": "邮编",
     "telephone": "电话号码",
     "full_address": "完整地址",
-    "country": "国家"
+    "country": "国家",
+    "hk_zipcode_tooltip_aria": "香港邮编填写说明",
+    "hk_zipcode_tooltip_text": "香港邮政建议在填写时留空栏位，或尝试填写\"000\"、\"0000\"、\"000000\"或\"HKG\"。 中国邮政分配的邮政编码\"999077\"在本地并不使用，仅在中国大陆的跨境运输中为应对系统技术限制而存在。"
   },
   "actions": {
     "generate": "生成",
     "save": "保存",
+    "export": "导出",
     "generate_new": "生成新地址",
     "save_address": "保存地址",
     "copy_address": "复制地址",
@@ -72,7 +77,11 @@
     "save_failed": "保存地址失败，请重试",
     "copy_success": "地址已复制到剪贴板",
     "copy_failed": "复制失败，请手动复制地址",
-    "copy_failed_manual": "复制失败，请手动复制地址"
+    "copy_failed_manual": "复制失败，请手动复制地址",
+    "export_csv": "导出CSV",
+    "export_success": "地址数据已导出",
+    "export_failed": "导出失败，请重试",
+    "no_data_to_export": "没有可导出的地址数据"
   },
   "saved_addresses": {
     "title": "我的保存地址",
@@ -84,7 +93,26 @@
     "clear_success": "所有地址已清空",
     "clear_failed": "清空失败，请重试",
     "load_failed": "读取保存的地址失败",
-    "created_at": "创建时间"
+    "created_at": "创建时间",
+    "page_title": "我的保存地址",
+    "count_text": "已保存的地址",
+    "count_unit": "个",
+    "no_saved_addresses": "还没有保存任何地址",
+    "back_to_generate": "返回首页生成地址",
+    "delete_address": "删除地址",
+    "export_csv": "导出",
+    "export_success": "导出成功",
+    "export_failed": "导出失败，请重试",
+    "no_data_export": "没有数据可导出",
+    "copy_full_address": "复制完整地址",
+    "copied": "已复制!",
+    "copy_failed": "复制失败，请手动复制地址",
+    "fallback_copy_failed": "降级复制方法也失败",
+    "manual_copy_message": "复制失败，请手动复制地址",
+    "address_count": "已保存的地址 ({count}个)",
+    "back_to_home": "返回首页生成地址",
+    "delete": "删除",
+    "copy": "复制"
   },
   "navigation": {
     "home": "首页",
