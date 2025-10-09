@@ -777,7 +777,7 @@ export default function AddressGenerator() {
                       {showZipCodeTooltip && (
                         <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-80 p-3 bg-gray-900 text-white text-xs rounded-lg shadow-lg z-50">
                           <div className="relative">
-                            香港邮政建议在填写时留空栏位，或尝试填写"000"、"0000"、"000000"或"HKG"。 中国邮政分配的邮政编码"999077"在本地并不使用，仅在中国大陆的跨境运输中为应对系统技术限制而存在。
+                            香港邮政建议在填写时留空栏位，或尝试填写&quot;000&quot;、&quot;0000&quot;、&quot;000000&quot;或&quot;HKG&quot;。 中国邮政分配的邮政编码&quot;999077&quot;在本地并不使用，仅在中国大陆的跨境运输中为应对系统技术限制而存在。
                             <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-900"></div>
                           </div>
                         </div>
