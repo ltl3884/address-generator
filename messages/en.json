@@ -222,7 +222,10 @@
     "disclaimer": "The generated address data comes from publicly available online resources, not for commercial use, for learning reference only.",
     "terms_of_use": "Terms of Use",
     "privacy_policy": "Privacy Policy",
-    "cookie_policy": "Cookie Policy"
+    "cookie_policy": "Cookie Policy",
+    "contact_us": "Contact Us",
+    "email_support": "Email Support",
+    "follow_us": "Follow Us"
   },
   "terms": {
     "title": "Terms of Use - Address Generator",

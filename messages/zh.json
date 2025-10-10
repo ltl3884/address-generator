@@ -222,7 +222,10 @@
     "disclaimer": "地址生成的数据来自于网上的公开资料, 不用于任何商业用途, 仅供学习参考.",
     "terms_of_use": "使用条款",
     "privacy_policy": "隐私政策",
-    "cookie_policy": "Cookie 政策"
+    "cookie_policy": "Cookie 政策",
+    "contact_us": "联系我们",
+    "email_support": "邮箱支持",
+    "follow_us": "关注我们"
   },
   "terms": {
     "title": "使用条款 - 地址生成器",

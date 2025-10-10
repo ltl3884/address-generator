@@ -1064,6 +1064,43 @@ export default function AddressGenerator() {
                 {tFooter('cookie_policy')}
               </Link>
             </div>
+            
+            {/* Contact Us Section */}
+            <div className="mt-6 pt-4 border-t border-border-light dark:border-border-dark">
+              <h3 className="text-sm font-semibold text-text-light dark:text-text-dark mb-3">
+                {tFooter('contact_us')}
+              </h3>
+              <div className="flex flex-col sm:flex-row justify-center items-center space-y-2 sm:space-y-0 sm:space-x-6">
+                <div className="flex items-center space-x-2">
+                  <span className="material-icons text-primary text-sm">email</span>
+                  <span className="text-xs text-subtle-light dark:text-subtle-dark">
+                    {tFooter('email_support')}:
+                  </span>
+                  <a 
+                    href="mailto:support@address-generator.xyz"
+                    className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 transition-colors text-xs"
+                  >
+                    support@address-generator.xyz
+                  </a>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <svg className="w-4 h-4 text-primary" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                  </svg>
+                  <span className="text-xs text-subtle-light dark:text-subtle-dark">
+                    {tFooter('follow_us')}:
+                  </span>
+                  <a 
+                    href="https://x.com/0xltl3884"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 transition-colors text-xs"
+                  >
+                    @0xltl3884
+                  </a>
+                </div>
+              </div>
+            </div>
           </div>
         </footer>
       </div>
