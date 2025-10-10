@@ -1042,6 +1042,28 @@ export default function AddressGenerator() {
           <div className="pt-4 text-center text-xs text-subtle-light dark:text-subtle-dark">
             <p>{tFooter('copyright')}</p>
             <p className="mt-1">{tFooter('disclaimer')}</p>
+            <div className="mt-4 flex justify-center space-x-4">
+              <Link 
+                href="/terms" 
+                className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 transition-colors"
+              >
+                {tFooter('terms_of_use')}
+              </Link>
+              <span className="text-gray-400">|</span>
+              <Link 
+                href="/privacy" 
+                className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 transition-colors"
+              >
+                {tFooter('privacy_policy')}
+              </Link>
+              <span className="text-gray-400">|</span>
+              <Link 
+                href="/cookies" 
+                className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 transition-colors"
+              >
+                {tFooter('cookie_policy')}
+              </Link>
+            </div>
           </div>
         </footer>
       </div>
