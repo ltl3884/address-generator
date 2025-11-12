@@ -122,6 +122,7 @@ export default async function LocaleLayout({
           href="https://fonts.googleapis.com/icon?family=Material+Icons"
           rel="stylesheet"
         />
+        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6282640794621676" crossorigin="anonymous"></script>
       </head>
       <body className="antialiased">
         <StructuredData 
