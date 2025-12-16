@@ -32,6 +32,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   
   // 博客文章
   const articles = [
+    'how-to-use-fake-address-generator-safely',
     'us-tax-free-states',
     'us-address-structure', 
     'why-delaware-best-tax-free',

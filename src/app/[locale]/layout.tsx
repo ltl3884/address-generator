@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Script from 'next/script';
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
 import { notFound } from 'next/navigation';
@@ -122,7 +123,11 @@ export default async function LocaleLayout({
           href="https://fonts.googleapis.com/icon?family=Material+Icons"
           rel="stylesheet"
         />
-        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6282640794621676" crossOrigin="anonymous"></script>
+        <Script 
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6282640794621676" 
+          crossOrigin="anonymous" 
+          strategy="afterInteractive"
+        />
       </head>
       <body className="antialiased">
         <StructuredData 

@@ -45,7 +45,11 @@ interface ApiResponse {
   data: AddressData;
 }
 
-export default function AddressGenerator() {
+interface AddressGeneratorProps {
+  h1Title?: string;
+}
+
+export default function AddressGenerator({ h1Title }: AddressGeneratorProps) {
   // Translation hooks
   const tTheme = useTranslations('theme');
   const tHeader = useTranslations('header');
@@ -567,7 +571,7 @@ export default function AddressGenerator() {
             >
               <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
             </svg>
-            <h1 className="text-3xl font-bold text-primary">{tHeader('title')}</h1>
+            <h1 className="text-3xl font-bold text-primary">{h1Title || tHeader('title')}</h1>
           </div>
           <div className="flex items-center space-x-4">
             <LanguageSwitcher />
@@ -978,6 +982,20 @@ export default function AddressGenerator() {
         <section className="mt-8 bg-surface-light dark:glass-morphism p-6 rounded-lg shadow-card dark:shadow-glass border border-border-light dark:border-border-glass backdrop-blur-glass">
           <h2 className="text-2xl font-bold text-primary mb-6 text-center">{tBlog('title')}</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6 max-w-6xl mx-auto">
+            <div className="bg-white dark:bg-gray-800/50 p-5 rounded-lg border border-border-light dark:border-border-dark hover:shadow-lg transition-shadow duration-300">
+              <Link href="/article/how-to-use-fake-address-generator-safely" className="block group">
+                <h3 className="text-lg font-semibold text-text-light dark:text-text-dark mb-3 flex items-center group-hover:text-primary transition-colors">
+                  <span className="material-icons text-primary mr-2">article</span>
+                  {tBlog('articles.how_to_use_fake_address_safely.title')}
+                </h3>
+                <p className="text-subtle-light dark:text-subtle-dark leading-relaxed">
+                  {tBlog('articles.how_to_use_fake_address_safely.description')}
+                </p>
+                <div className="mt-3 text-primary text-sm font-medium group-hover:underline">
+                  {tBlog('read_more')}
+                </div>
+              </Link>
+            </div>
             <div className="bg-white dark:bg-gray-800/50 p-5 rounded-lg border border-border-light dark:border-border-dark hover:shadow-lg transition-shadow duration-300">
               <Link href="/article/us-address-structure" target="_blank" rel="noopener noreferrer" className="block group">
                 <h3 className="text-lg font-semibold text-text-light dark:text-text-dark mb-3 flex items-center group-hover:text-primary transition-colors">

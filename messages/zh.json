@@ -214,6 +214,10 @@
       "hong_kong_address_structure": {
         "title": "香港地址结构详解",
         "description": "详细解析香港地址的组成结构，包括区域、街道、大厦编号等各部分的含义和格式。"
+      },
+      "how_to_use_fake_address_safely": {
+        "title": "如何安全地使用虚拟地址生成器 - 终极指南",
+        "description": "了解如何安全地使用虚拟地址生成器进行测试、隐私保护和在线注册。避免法律风险，了解有效地址和虚拟地址的区别。"
       }
     }
   },

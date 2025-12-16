@@ -1,8 +1,10 @@
+import { Metadata } from 'next';
 import AddressGenerator from '@/components/AddressGenerator';
 
 interface USStatePageProps {
   params: {
     state: string;
+    locale: string;
   };
 }
 
@@ -86,9 +88,25 @@ export async function generateStaticParams() {
   return allStates;
 }
 
+export async function generateMetadata({ params }: USStatePageProps): Promise<Metadata> {
+  const { state } = params;
+  const decodedState = decodeURIComponent(state);
+  
+  return {
+    title: `${decodedState} Address Generator - Free Real US Address`,
+    description: `Generate random ${decodedState} addresses with Zip Code, City, and Phone Number. Free tool for testing and verification purposes.`,
+    keywords: `${decodedState} address generator, ${decodedState} fake address, random address in ${decodedState}, us address generator`,
+    openGraph: {
+      title: `${decodedState} Address Generator - Free Real US Address`,
+      description: `Generate random ${decodedState} addresses with Zip Code, City, and Phone Number.`,
+    }
+  };
+}
+
 export default function USStatePage({ params }: USStatePageProps) {
   // AddressGenerator组件会自动从URL路径中解析州名参数
   // params 参数用于静态生成，组件内部通过路由解析
-  console.log('State page accessed for:', params.state);
-  return <AddressGenerator />;
+  const decodedState = decodeURIComponent(params.state);
+  
+  return <AddressGenerator h1Title={`${decodedState} Address Generator`} />;
 }
