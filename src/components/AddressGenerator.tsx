@@ -61,10 +61,10 @@ export default function AddressGenerator({ h1Title }: AddressGeneratorProps) {
   const tFaq = useTranslations('faq');
   const tBlog = useTranslations('blog');
   const tFooter = useTranslations('footer');
-  
+
   // Get current locale
   const locale = useLocale();
-  
+
   // Dynamic width class based on locale
   const getLabelWidth = () => {
     return locale === 'zh' ? 'w-20' : 'w-30';
@@ -110,7 +110,7 @@ export default function AddressGenerator({ h1Title }: AddressGeneratorProps) {
     const path = window.location.pathname;
     // 移除开头的/，分割路径
     const pathParts = path.replace(/^\//, '').split('/').filter(Boolean);
-    
+
     if (pathParts.length === 0) {
       // 根路径，默认返回us
       return { country: 'us', place: '' };
@@ -146,7 +146,7 @@ export default function AddressGenerator({ h1Title }: AddressGeneratorProps) {
         return { country: pathParts[0], place: decodeURIComponent(pathParts[1]) };
       }
     }
-    
+
     // 默认情况
     return { country: 'us', place: '' };
   };
@@ -157,7 +157,7 @@ export default function AddressGenerator({ h1Title }: AddressGeneratorProps) {
     const { country, place } = parseCurrentPath();
     setCurrentCountry(country);
     setCurrentPlace(place);
-    
+
     // 设置搜索框的默认值为路径的最后一个部分
     if (place) {
       setSearchQuery(place);
@@ -167,7 +167,7 @@ export default function AddressGenerator({ h1Title }: AddressGeneratorProps) {
   // 读取已保存地址个数
   useEffect(() => {
     if (!isClient) return;
-    
+
     const loadSavedAddressCount = () => {
       try {
         const savedAddresses = JSON.parse(localStorage.getItem('savedAddresses') || '[]');
@@ -223,7 +223,7 @@ export default function AddressGenerator({ h1Title }: AddressGeneratorProps) {
         if (currentPlace.trim()) {
           requestBody.place = currentPlace.trim();
         }
-        
+
         console.log('Fetching new data for country:', currentCountry, currentPlace ? `with place: ${currentPlace}` : '');
         const response = await fetch('/api/address/info', {
           method: 'POST',
@@ -292,7 +292,7 @@ export default function AddressGenerator({ h1Title }: AddressGeneratorProps) {
 
   const handleGenerate = async () => {
     const country = currentCountry;
-    
+
     // 构建请求体，如果搜索框有值则包含 place 参数
     const requestBody: { country: string; place?: string } = { country };
     if (searchQuery.trim()) {
@@ -367,8 +367,8 @@ export default function AddressGenerator({ h1Title }: AddressGeneratorProps) {
       setSavedAddressCount(existingAddresses.length);
 
       // 显示成功提示
-    showSaveMessage(tActions('address_saved'), 'info');
-  } catch (error) {
+      showSaveMessage(tActions('address_saved'), 'info');
+    } catch (error) {
       console.error('保存地址失败:', error);
       showSaveMessage(tActions('save_failed'), 'error');
     }
@@ -528,7 +528,7 @@ export default function AddressGenerator({ h1Title }: AddressGeneratorProps) {
 
   const handleCopyAddress = async () => {
     const fullAddress = `${addressData.address}, ${addressData.city}, ${addressData.state} ${addressData.zipCode}`;
-    
+
     try {
       await navigator.clipboard.writeText(fullAddress);
       setCopySuccess(true);
@@ -563,13 +563,13 @@ export default function AddressGenerator({ h1Title }: AddressGeneratorProps) {
         {/* Header */}
         <header className="flex justify-between items-center py-6 mb-4">
           <div className="flex items-center space-x-3">
-            <svg 
-              className="w-8 h-8 text-primary" 
-              fill="currentColor" 
+            <svg
+              className="w-8 h-8 text-primary"
+              fill="currentColor"
               viewBox="0 0 24 24"
               aria-hidden="true"
             >
-              <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+              <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
             </svg>
             <h1 className="text-3xl font-bold text-primary">{h1Title || tHeader('title')}</h1>
           </div>
@@ -626,9 +626,8 @@ export default function AddressGenerator({ h1Title }: AddressGeneratorProps) {
                     onKeyDown={handleKeyDown}
                   />
                   <button
-                    className={`bg-primary text-white px-6 py-3 rounded-md font-medium transition-colors text-sm ${
-                      isSearching ? 'opacity-75 cursor-not-allowed' : 'hover:bg-primary-600'
-                    }`}
+                    className={`bg-primary text-white px-6 py-3 rounded-md font-medium transition-colors text-sm ${isSearching ? 'opacity-75 cursor-not-allowed' : 'hover:bg-primary-600'
+                      }`}
                     onClick={handleSearch}
                     disabled={isSearching}
                   >
@@ -663,11 +662,10 @@ export default function AddressGenerator({ h1Title }: AddressGeneratorProps) {
                     {suggestions.map((suggestion, index) => (
                       <div
                         key={suggestion}
-                        className={`px-4 py-3 cursor-pointer transition-colors text-sm ${
-                          index === highlightedIndex
-                            ? 'bg-primary text-white'
-                            : 'hover:bg-primary/10 dark:hover:bg-primary/20 text-text-light dark:text-text-dark'
-                        }`}
+                        className={`px-4 py-3 cursor-pointer transition-colors text-sm ${index === highlightedIndex
+                          ? 'bg-primary text-white'
+                          : 'hover:bg-primary/10 dark:hover:bg-primary/20 text-text-light dark:text-text-dark'
+                          }`}
                         onClick={() => selectSuggestion(suggestion)}
                         onMouseEnter={() => setHighlightedIndex(index)}
                       >
@@ -749,8 +747,8 @@ export default function AddressGenerator({ h1Title }: AddressGeneratorProps) {
               <div className="flex border-b border-dashed border-border-light dark:border-border-dark py-3">
                 <span className="w-20 text-subtle-light dark:text-subtle-dark">{tAddress('full_name')}:</span>
                 <span className="flex-1 text-text-light dark:text-text-dark">
-                  {(currentCountry === 'tw' || currentCountry === 'hk' || currentCountry === 'sg') 
-                    ? addressData.fullName 
+                  {(currentCountry === 'tw' || currentCountry === 'hk' || currentCountry === 'sg')
+                    ? addressData.fullName
                     : `${addressData.firstName} ${addressData.lastName}`}
                 </span>
               </div>
@@ -780,7 +778,7 @@ export default function AddressGenerator({ h1Title }: AddressGeneratorProps) {
                   <span className="text-text-light dark:text-text-dark">{addressData.zipCode}</span>
                   {isClient && currentCountry === 'hk' && (
                     <div className="relative ml-2">
-                      <span 
+                      <span
                         className="inline-flex items-center justify-center w-4 h-4 text-xs text-white bg-blue-500 rounded-full cursor-help hover:bg-blue-600 transition-colors"
                         onMouseEnter={() => setShowZipCodeTooltip(true)}
                         onMouseLeave={() => setShowZipCodeTooltip(false)}
@@ -808,10 +806,10 @@ export default function AddressGenerator({ h1Title }: AddressGeneratorProps) {
                 <span className={`${getLabelWidth()} text-subtle-light dark:text-subtle-dark`}>{tAddress('full_address')}:</span>
                 <div className="flex-1 flex items-center">
                   <span className="text-text-light dark:text-text-dark">
-                    {!isClient 
+                    {!isClient
                       ? `${addressData.address}, ${addressData.city}, ${addressData.state} ${addressData.zipCode}`
-                      : currentCountry === 'sg' 
-                        ? addressData.address 
+                      : currentCountry === 'sg'
+                        ? addressData.address
                         : (currentCountry === 'tw' || currentCountry === 'hk')
                           ? `${addressData.address}, ${addressData.city}, ${addressData.zipCode}`
                           : `${addressData.address}, ${addressData.city}, ${addressData.state} ${addressData.zipCode}`
@@ -821,8 +819,8 @@ export default function AddressGenerator({ h1Title }: AddressGeneratorProps) {
                     onClick={handleCopyAddress}
                     className={`
                       ml-2 p-1 rounded-md transition-all duration-200 ease-in-out
-                      ${copySuccess 
-                        ? 'text-green-500 bg-green-50 dark:bg-green-900/20' 
+                      ${copySuccess
+                        ? 'text-green-500 bg-green-50 dark:bg-green-900/20'
                         : 'text-gray-500 hover:text-primary hover:bg-gray-100 dark:hover:bg-gray-700'
                       }
                       flex items-center justify-center w-6 h-6 flex-shrink-0
@@ -845,40 +843,40 @@ export default function AddressGenerator({ h1Title }: AddressGeneratorProps) {
               <h3 className="text-lg font-semibold text-primary border-b border-border-light dark:border-border-dark pb-3 mb-4">{tNavigation('tax_free_states')}</h3>
               <ul className="space-y-1 text-sm">
                 <li>
-                  <Link 
-                    className="block p-2 rounded-md text-subtle-light dark:text-subtle-dark hover:bg-primary hover:text-white transition-colors cursor-pointer" 
+                  <Link
+                    className="block p-2 rounded-md text-subtle-light dark:text-subtle-dark hover:bg-primary hover:text-white transition-colors cursor-pointer"
                     href="/us/Alaska"
                   >
                     {tNavigation('alaska_address')}
                   </Link>
                 </li>
                 <li>
-                  <Link 
-                    className="block p-2 rounded-md text-subtle-light dark:text-subtle-dark hover:bg-primary hover:text-white transition-colors cursor-pointer" 
+                  <Link
+                    className="block p-2 rounded-md text-subtle-light dark:text-subtle-dark hover:bg-primary hover:text-white transition-colors cursor-pointer"
                     href="/us/Delaware"
                   >
                     {tNavigation('delaware_address')}
                   </Link>
                 </li>
                 <li>
-                  <Link 
-                    className="block p-2 rounded-md text-subtle-light dark:text-subtle-dark hover:bg-primary hover:text-white transition-colors cursor-pointer" 
+                  <Link
+                    className="block p-2 rounded-md text-subtle-light dark:text-subtle-dark hover:bg-primary hover:text-white transition-colors cursor-pointer"
                     href="/us/Montana"
                   >
                     {tNavigation('montana_address')}
                   </Link>
                 </li>
                 <li>
-                  <Link 
-                    className="block p-2 rounded-md text-subtle-light dark:text-subtle-dark hover:bg-primary hover:text-white transition-colors cursor-pointer" 
+                  <Link
+                    className="block p-2 rounded-md text-subtle-light dark:text-subtle-dark hover:bg-primary hover:text-white transition-colors cursor-pointer"
                     href="/us/New Hampshire"
                   >
                     {tNavigation('new_hampshire_address')}
                   </Link>
                 </li>
                 <li>
-                  <Link 
-                    className="block p-2 rounded-md text-subtle-light dark:text-subtle-dark hover:bg-primary hover:text-white transition-colors cursor-pointer" 
+                  <Link
+                    className="block p-2 rounded-md text-subtle-light dark:text-subtle-dark hover:bg-primary hover:text-white transition-colors cursor-pointer"
                     href="/us/Oregon"
                   >
                     {tNavigation('oregon_address')}
@@ -891,40 +889,40 @@ export default function AddressGenerator({ h1Title }: AddressGeneratorProps) {
               <h3 className="text-lg font-semibold text-primary border-b border-border-light dark:border-border-dark pb-3 mb-4">{tNavigation('popular_cities')}</h3>
               <ul className="space-y-1 text-sm">
                 <li>
-                  <Link 
-                    className="block p-2 rounded-md text-subtle-light dark:text-subtle-dark hover:bg-primary hover:text-white transition-colors cursor-pointer" 
+                  <Link
+                    className="block p-2 rounded-md text-subtle-light dark:text-subtle-dark hover:bg-primary hover:text-white transition-colors cursor-pointer"
                     href="/us/New York"
                   >
                     {tNavigation('new_york_address')}
                   </Link>
                 </li>
                 <li>
-                  <Link 
-                    className="block p-2 rounded-md text-subtle-light dark:text-subtle-dark hover:bg-primary hover:text-white transition-colors cursor-pointer" 
+                  <Link
+                    className="block p-2 rounded-md text-subtle-light dark:text-subtle-dark hover:bg-primary hover:text-white transition-colors cursor-pointer"
                     href="/us/Los Angeles"
                   >
                     {tNavigation('los_angeles_address')}
                   </Link>
                 </li>
                 <li>
-                  <Link 
-                    className="block p-2 rounded-md text-subtle-light dark:text-subtle-dark hover:bg-primary hover:text-white transition-colors cursor-pointer" 
+                  <Link
+                    className="block p-2 rounded-md text-subtle-light dark:text-subtle-dark hover:bg-primary hover:text-white transition-colors cursor-pointer"
                     href="/us/Chicago"
                   >
                     {tNavigation('chicago_address')}
                   </Link>
                 </li>
                 <li>
-                  <Link 
-                    className="block p-2 rounded-md text-subtle-light dark:text-subtle-dark hover:bg-primary hover:text-white transition-colors cursor-pointer" 
+                  <Link
+                    className="block p-2 rounded-md text-subtle-light dark:text-subtle-dark hover:bg-primary hover:text-white transition-colors cursor-pointer"
                     href="/us/Houston"
                   >
                     {tNavigation('houston_address')}
                   </Link>
                 </li>
                 <li>
-                  <Link 
-                    className="block p-2 rounded-md text-subtle-light dark:text-subtle-dark hover:bg-primary hover:text-white transition-colors cursor-pointer" 
+                  <Link
+                    className="block p-2 rounded-md text-subtle-light dark:text-subtle-dark hover:bg-primary hover:text-white transition-colors cursor-pointer"
                     href="/us/Phoenix"
                   >
                     {tNavigation('phoenix_address')}
@@ -1020,8 +1018,8 @@ export default function AddressGenerator({ h1Title }: AddressGeneratorProps) {
                   {tBlog('articles.us_address_structure.description')}
                 </p>
                 <div className="mt-3 text-primary text-sm font-medium group-hover:underline">
-                   {tBlog('read_more')}
-                 </div>
+                  {tBlog('read_more')}
+                </div>
               </Link>
             </div>
             <div className="bg-white dark:bg-gray-800/50 p-5 rounded-lg border border-border-light dark:border-border-dark hover:shadow-lg transition-shadow duration-300">
@@ -1034,8 +1032,8 @@ export default function AddressGenerator({ h1Title }: AddressGeneratorProps) {
                   {tBlog('articles.why_delaware_best_tax_free.description')}
                 </p>
                 <div className="mt-3 text-primary text-sm font-medium group-hover:underline">
-                   {tBlog('read_more')}
-                 </div>
+                  {tBlog('read_more')}
+                </div>
               </Link>
             </div>
             <div className="bg-white dark:bg-gray-800/50 p-5 rounded-lg border border-border-light dark:border-border-dark hover:shadow-lg transition-shadow duration-300">
@@ -1048,8 +1046,8 @@ export default function AddressGenerator({ h1Title }: AddressGeneratorProps) {
                   {tBlog('articles.hong_kong_address_structure.description')}
                 </p>
                 <div className="mt-3 text-primary text-sm font-medium group-hover:underline">
-                   {tBlog('read_more')}
-                 </div>
+                  {tBlog('read_more')}
+                </div>
               </Link>
             </div>
           </div>
@@ -1061,28 +1059,28 @@ export default function AddressGenerator({ h1Title }: AddressGeneratorProps) {
             <p>{tFooter('copyright')}</p>
             <p className="mt-1">{tFooter('disclaimer')}</p>
             <div className="mt-4 flex justify-center space-x-4">
-              <Link 
-                href="/terms" 
+              <Link
+                href="/terms"
                 className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 transition-colors"
               >
                 {tFooter('terms_of_use')}
               </Link>
               <span className="text-gray-400">|</span>
-              <Link 
-                href="/privacy" 
+              <Link
+                href="/privacy"
                 className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 transition-colors"
               >
                 {tFooter('privacy_policy')}
               </Link>
               <span className="text-gray-400">|</span>
-              <Link 
-                href="/cookies" 
+              <Link
+                href="/cookies"
                 className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 transition-colors"
               >
                 {tFooter('cookie_policy')}
               </Link>
             </div>
-            
+
             {/* Contact Us Section */}
             <div className="mt-6 pt-4 border-t border-border-light dark:border-border-dark">
               <h3 className="text-sm font-semibold text-text-light dark:text-text-dark mb-3">
@@ -1094,7 +1092,7 @@ export default function AddressGenerator({ h1Title }: AddressGeneratorProps) {
                   <span className="text-xs text-subtle-light dark:text-subtle-dark">
                     {tFooter('email_support')}:
                   </span>
-                  <a 
+                  <a
                     href="mailto:support@address-generator.xyz"
                     className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 transition-colors text-xs"
                   >
@@ -1103,18 +1101,18 @@ export default function AddressGenerator({ h1Title }: AddressGeneratorProps) {
                 </div>
                 <div className="flex items-center space-x-2">
                   <svg className="w-4 h-4 text-primary" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
                   </svg>
                   <span className="text-xs text-subtle-light dark:text-subtle-dark">
                     {tFooter('follow_us')}:
                   </span>
-                  <a 
-                    href="https://x.com/0xltl3884"
+                  <a
+                    href="https://x.com/0xLinAI"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 transition-colors text-xs"
                   >
-                    @0xltl3884
+                    @0xLinAI
                   </a>
                 </div>
               </div>
