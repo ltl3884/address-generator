@@ -75,7 +75,7 @@ export class AddressService {
       const addressInfo = await prisma.$queryRaw`
         SELECT * FROM address_info
         WHERE country = ${cleanCountry}
-        ORDER BY RAND()
+        ORDER BY RANDOM()
         LIMIT 1
       ` as Array<{
         full_name: string;
@@ -138,7 +138,7 @@ export class AddressService {
           OR state = ${cleanPlace}
           OR state_full = ${cleanPlace}
         )
-        ORDER BY RAND()
+        ORDER BY RANDOM()
         LIMIT 1
       ` as Array<{
         full_name: string;
