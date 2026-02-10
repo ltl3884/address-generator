@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import Script from 'next/script';
+
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
 import { notFound } from 'next/navigation';
@@ -23,7 +23,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   const messages = await getMessages({ locale });
-  
+
   return {
     title: {
       default: messages.common.title,
@@ -106,7 +106,7 @@ export default async function LocaleLayout({
   params
 }: Props) {
   const { locale } = await params;
-  
+
   // Ensure that the incoming `locale` is valid
   if (!routing.locales.includes(locale as (typeof routing.locales)[number])) {
     notFound();
@@ -123,14 +123,10 @@ export default async function LocaleLayout({
           href="https://fonts.googleapis.com/icon?family=Material+Icons"
           rel="stylesheet"
         />
-        <Script 
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6282640794621676" 
-          crossOrigin="anonymous" 
-          strategy="afterInteractive"
-        />
+
       </head>
       <body className="antialiased">
-        <StructuredData 
+        <StructuredData
           type="website"
           title={messages.common.title}
           description={messages.common.description}
