@@ -2,10 +2,10 @@ import { Metadata } from 'next';
 import AddressGenerator from '@/components/AddressGenerator';
 
 interface USStatePageProps {
-  params: {
+  params: Promise<{
     state: string;
     locale: string;
-  };
+  }>;
 }
 
 // 生成静态参数，用于预渲染所有美国州
@@ -89,7 +89,7 @@ export async function generateStaticParams() {
 }
 
 export async function generateMetadata({ params }: USStatePageProps): Promise<Metadata> {
-  const { state } = params;
+  const { state } = await params;
   const decodedState = decodeURIComponent(state);
   
   return {
@@ -103,10 +103,11 @@ export async function generateMetadata({ params }: USStatePageProps): Promise<Me
   };
 }
 
-export default function USStatePage({ params }: USStatePageProps) {
+export default async function USStatePage({ params }: USStatePageProps) {
   // AddressGenerator组件会自动从URL路径中解析州名参数
   // params 参数用于静态生成，组件内部通过路由解析
-  const decodedState = decodeURIComponent(params.state);
+  const { state } = await params;
+  const decodedState = decodeURIComponent(state);
   
   return <AddressGenerator h1Title={`${decodedState} Address Generator`} />;
 }

@@ -4,13 +4,14 @@ import { getTranslations } from 'next-intl/server';
 import Link from 'next/link';
 
 interface CookiesPageProps {
-  params: {
+  params: Promise<{
     locale: string;
-  };
+  }>;
 }
 
 export async function generateMetadata({ params }: CookiesPageProps): Promise<Metadata> {
-  const t = await getTranslations({ locale: params.locale, namespace: 'cookies' });
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: 'cookies' });
   
   return {
     title: t('title'),

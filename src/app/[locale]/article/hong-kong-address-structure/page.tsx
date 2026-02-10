@@ -2,11 +2,12 @@ import { Metadata } from 'next';
 import Link from 'next/link';
 
 interface Props {
-  params: { locale: string };
+  params: Promise<{ locale: string }>;
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const isEnglish = params.locale === 'en';
+  const { locale } = await params;
+  const isEnglish = locale === 'en';
   
   return {
     title: isEnglish 
@@ -18,8 +19,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-export default function HongKongAddressStructurePage({ params }: Props) {
-  const isEnglish = params.locale === 'en';
+export default async function HongKongAddressStructurePage({ params }: Props) {
+  const { locale } = await params;
+  const isEnglish = locale === 'en';
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
@@ -28,7 +30,7 @@ export default function HongKongAddressStructurePage({ params }: Props) {
           {/* Back to Home Button */}
           <div className="mb-6">
             <Link 
-              href={`/${params.locale}`}
+              href={`/${locale}`}
               className="inline-flex items-center text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors"
             >
               <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">

@@ -1,13 +1,15 @@
 import { Metadata } from 'next';
+import Link from 'next/link';
 
 interface PageProps {
-  params: {
+  params: Promise<{
     locale: string;
-  };
+  }>;
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  const isEnglish = params.locale === 'en';
+  const { locale } = await params;
+  const isEnglish = locale === 'en';
   
   return {
     title: isEnglish ? 'Why Delaware is the Best Tax-Free State?' : '为什么特拉华州是最佳免税州？',
@@ -17,8 +19,9 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   };
 }
 
-export default function UsTaxFreeStatesPage({ params }: PageProps) {
-  const isEnglish = params.locale === 'en';
+export default async function UsTaxFreeStatesPage({ params }: PageProps) {
+  const { locale } = await params;
+  const isEnglish = locale === 'en';
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
@@ -289,13 +292,13 @@ export default function UsTaxFreeStatesPage({ params }: PageProps) {
 
           {/* Back to Home */}
           <div className="text-center mt-8">
-            <a
-              href={`/${params.locale}`}
+            <Link
+              href={`/${locale}`}
               className="inline-flex items-center px-6 py-3 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors"
             >
               <span className="material-icons mr-2">arrow_back</span>
               {isEnglish ? 'Back to Home' : '返回首页'}
-            </a>
+            </Link>
           </div>
         </div>
       </div>

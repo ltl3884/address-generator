@@ -1,13 +1,14 @@
 import { Metadata } from 'next';
 
 interface PageProps {
-  params: {
+  params: Promise<{
     locale: string;
-  };
+  }>;
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  const isEnglish = params.locale === 'en';
+  const { locale } = await params;
+  const isEnglish = locale === 'en';
   
   return {
     title: isEnglish 
@@ -19,8 +20,9 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   };
 }
 
-export default function HowToUseFakeAddressPage({ params }: PageProps) {
-  const isEnglish = params.locale === 'en';
+export default async function HowToUseFakeAddressPage({ params }: PageProps) {
+  const { locale } = await params;
+  const isEnglish = locale === 'en';
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-8">
