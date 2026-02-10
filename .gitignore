@@ -199,3 +199,4 @@ tasks/
 .env.production
 address-generator.xyz.crt
 address-generator.xyz.key
+.env.docker
